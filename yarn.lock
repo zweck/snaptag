@@ -2917,6 +2917,14 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
+react-native-camera-roll-picker@zweck/react-native-camera-roll-picker#patch-1:
+  version "1.1.9"
+  resolved "https://codeload.github.com/zweck/react-native-camera-roll-picker/tar.gz/9880523289cf5a02374e7e4d71accdd5afcbf36f"
+
+react-native-navbar@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/react-native-navbar/-/react-native-navbar-1.6.2.tgz#f324f654100423e96df37dedcbeda819f04c03ff"
+
 react-native@0.42.0:
   version "0.42.0"
   resolved "https://registry.yarnpkg.com/react-native/-/react-native-0.42.0.tgz#59b501603a63232598fff653a36307a26010402e"

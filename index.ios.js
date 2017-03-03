@@ -13,36 +13,49 @@ import {
   View
 } from 'react-native';
 
-export default class snaptag extends Component {
-  render() {
-    return (
-      <NavigatorIOS
-        initialRoute={{
-          component: initialRoute,
-          title: 'All Photos',
-          rightButtonTitle: 'Select',
-          leftButtonTitle: '#',
-        }}
-        style={{flex: 1}}
-      />
-    );
-  }
-}
+import NavigationBar from 'react-native-navbar';
+import CameraRollPicker from 'react-native-camera-roll-picker';
 
-class initialRoute extends Component {
+export default class snaptag extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      isSelectable: false
+    };
+  }
+
+  toggleSelect(){
+    this.setState({ isSelectable: !this.state.isSelectable });
+  }
+
+  getSelectedImages(images, current){
+    console.log(images, current)
+  }
+
   render() {
+    let rightButtonTitle = this.state.isSelectable ? 'Add Tags' : 'Select';
+    let leftButtonTitle = this.state.isSelectable ? 'Cancel' : '#';
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.ios.js
-        </Text>
-        <Text style={styles.instructions}>
-          Press Cmd+R to reload,{'\n'}
-          Cmd+D or shake for dev menu
-        </Text>
+        <NavigationBar
+          tintColor={'transparent'}
+          title={{
+            title: 'All Photos'
+          }}
+          rightButton={{
+            title: rightButtonTitle,
+            handler: this.toggleSelect.bind(this)
+          }}
+        />
+        <View style={{
+          flex: 1,
+        }}>
+          <CameraRollPicker
+            callback={this.getSelectedImages}
+            imagesPerRow={ 2 }
+            groupTypes={ 'All' }
+          />
+        </View>
       </View>
     );
   }
@@ -51,19 +64,12 @@ class initialRoute extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  cameraRoll: {
+    paddingTop: 70
   },
 });
 
