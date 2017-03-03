@@ -19,8 +19,8 @@ export default class snaptag extends Component {
       <NavigatorIOS
         initialRoute={{
           component: initialRoute,
-          title: 'snaptag',
-          rightButtonTitle: 'Select Photo',
+          title: 'All Photos',
+          rightButtonTitle: 'Select',
           leftButtonTitle: '#',
         }}
         style={{flex: 1}}
