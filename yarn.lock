@@ -2917,6 +2917,10 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
+react-native-blur@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-2.0.0.tgz#284b3abfb42c2d90924aa15f494ccb88d6055342"
+
 react-native-camera-roll-picker@zweck/react-native-camera-roll-picker#patch-1:
   version "1.1.9"
   resolved "https://codeload.github.com/zweck/react-native-camera-roll-picker/tar.gz/9880523289cf5a02374e7e4d71accdd5afcbf36f"

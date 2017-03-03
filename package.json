@@ -9,6 +9,7 @@
 	"dependencies": {
 		"react": "~15.4.1",
 		"react-native": "0.42.0",
+		"react-native-blur": "^2.0.0",
 		"react-native-camera-roll-picker": "zweck/react-native-camera-roll-picker#patch-1",
 		"react-native-navbar": "^1.6.2"
 	},

@@ -1,76 +1,43 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
-
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  NavigatorIOS,
   StyleSheet,
+  Navigator,
   Text,
   View
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
-import CameraRollPicker from 'react-native-camera-roll-picker';
+import InitialView from './InitialView';
 
-export default class snaptag extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      isSelectable: false
-    };
+function renderScene(route, navigator) {
+  return <route.component route={route} navigator={navigator} />;
+}
+
+function configureScene(route, routeStack){
+  if(route.type === 'Modal') {
+    return Navigator.SceneConfigs.FloatFromBottom
   }
+  return Navigator.SceneConfigs.PushFromRight 
+}
 
-  toggleSelect(){
-    this.setState({ isSelectable: !this.state.isSelectable });
-  }
 
-  getSelectedImages(images, current){
-    console.log(images, current)
-  }
-
+class Snaptag extends Component {
   render() {
-    let rightButtonTitle = this.state.isSelectable ? 'Add Tags' : 'Select';
-    let leftButtonTitle = this.state.isSelectable ? 'Cancel' : '#';
+    const initialRoute = {
+      component: InitialView
+    };
+
     return (
-      <View style={styles.container}>
-        <NavigationBar
-          tintColor={'transparent'}
-          title={{
-            title: 'All Photos'
-          }}
-          rightButton={{
-            title: rightButtonTitle,
-            handler: this.toggleSelect.bind(this)
-          }}
+      <View style={{ flex: 1, }}>
+        <Navigator
+          initialRoute={initialRoute}
+          renderScene={renderScene}
+          configureScene={configureScene}
         />
-        <View style={{
-          flex: 1,
-        }}>
-          <CameraRollPicker
-            callback={this.getSelectedImages}
-            imagesPerRow={ 2 }
-            groupTypes={ 'All' }
-          />
-        </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  cameraRoll: {
-    paddingTop: 70
-  },
-});
-
-AppRegistry.registerComponent('snaptag', () => snaptag);
+AppRegistry.registerComponent('snaptag', () => Snaptag);
