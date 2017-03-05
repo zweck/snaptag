@@ -120,6 +120,7 @@ export default class InitialView extends Component {
             selected={this.state.selectedImages}
             imageMargin={ 15 }
             backgroundColor={ '#f0f0f0' }
+            maximum={ 100 }
           />
         </View>
       </View>
