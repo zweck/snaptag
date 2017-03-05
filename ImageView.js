@@ -13,13 +13,13 @@ const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
 
-export default class snaptag extends Component {
+export default class ImageView extends Component {
   closeImage(){
     this.props.navigator.pop();
   }
 
   render(){
-    let imageUri = this.props.route.selectedImage;
+    let imageUri = this.props.route.currentUri;
     return(
       <View style={styles.container}>
         <NavigationBar
@@ -55,8 +55,7 @@ export default class snaptag extends Component {
           style={{
             width: width-60, 
             height: width-60,
-            borderRadius: 15,
-            // margin: 30,
+            borderRadius: 10,
           }}
         />
         </View>

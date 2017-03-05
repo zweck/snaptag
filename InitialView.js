@@ -11,6 +11,7 @@ import SearchBar from 'react-native-search-bar';
 
 import CameraRollPicker from './CameraRollPicker';
 import ImageView from './ImageView';
+import AddTags from './AddTags';
 import TagList from './TagList';
 
 const { width, height } = Dimensions.get('window');
@@ -22,7 +23,8 @@ export default class InitialView extends Component {
     super(props);
     this.state = {
       isSelectable: false,
-      selectedImages: []
+      selectedImages: [],
+      current: {}
     };
   }
 
@@ -31,14 +33,13 @@ export default class InitialView extends Component {
   }
 
   getSelectedImages(images, current){
-    // console.log(images, current);
-    this.setState({ selectedImages: images });
+    this.setState({ selectedImages: images, current });
     if(!this.state.isSelectable){
       this.setState({ selectedImages: [] });
       this.props.navigator.push({
         component: ImageView,
         type: 'Modal',
-        selectedImage: current.uri
+        currentUri: current.uri
       });
     }
   }
@@ -55,9 +56,37 @@ export default class InitialView extends Component {
     }
   }
 
+  openAddTagModal(){
+    if(this.state.selectedImages.length){
+      this.props.navigator.push({
+        component: AddTags,
+        type: 'Modal',
+        current: this.state.current,
+        selectedImages: this.state.selectedImages
+      });
+    }
+  }
+
   render() {
-    let rightButtonTitle = this.state.isSelectable ? 'Add Tags' : 'Select';
+    let rightButtonConfig = this.state.isSelectable ? {
+      title: 'Add Tags',
+      handler: this.openAddTagModal.bind(this)
+    } : {
+      title: 'Select',
+      handler: this.toggleSelect.bind(this)
+    }
+  
+    let leftButtonConfig = this.state.isSelectable ? {
+      title: 'Cancel',
+      tintColor: 'red',
+      handler: this.openTags.bind(this)
+    } : {
+      title: '    #    ',
+      handler: this.openTags.bind(this)
+    }
+  
     let leftButtonTitle = this.state.isSelectable ? 'Cancel' : '#';
+
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -71,14 +100,8 @@ export default class InitialView extends Component {
           title={{
             title: 'All Photos'
           }}
-          rightButton={{
-            title: rightButtonTitle,
-            handler: this.toggleSelect.bind(this)
-          }}
-          leftButton={{
-            title: leftButtonTitle,
-            handler: this.openTags.bind(this)
-          }}
+          rightButton={ rightButtonConfig }
+          leftButton={ leftButtonConfig }
         />
         <SearchBar
           ref='searchBar'
