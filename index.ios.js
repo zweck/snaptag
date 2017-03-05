@@ -18,6 +18,9 @@ function configureScene(route, routeStack){
   if(route.type === 'Modal') {
     return Navigator.SceneConfigs.FloatFromBottom
   }
+  if(route.type === 'SlideFromLeft') {
+    return Navigator.SceneConfigs.FloatFromLeft
+  }
   return Navigator.SceneConfigs.PushFromRight 
 }
 

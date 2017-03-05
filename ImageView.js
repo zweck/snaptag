@@ -3,10 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
+  Dimensions,
   Image
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
+
+const { width, height } = Dimensions.get('window');
+const SCREEN_WIDTH = width;
+const ASPECT_RATIO = width / height;
 
 export default class snaptag extends Component {
   closeImage(){
@@ -18,7 +23,12 @@ export default class snaptag extends Component {
     return(
       <View style={styles.container}>
         <NavigationBar
-          tintColor={'transparent'}
+          style={{
+            borderBottomColor: 'rgba(150,150,150,0.3)',
+            borderStyle: 'solid',
+            borderBottomWidth: 1,
+            position: 'relative',
+          }}
           title={{
             title: 'Image'
           }}
@@ -28,9 +38,27 @@ export default class snaptag extends Component {
           }}
         />
         <View style={{
-          flex: 1,
+          shadowColor: '#000000',
+          shadowOffset: {
+            width: 0,
+            height: 3
+          },
+          shadowRadius: 3,
+          shadowOpacity: 0.2,
+          width: width-60, 
+          height: width-60,
+          margin: 30,
+          borderRadius: 15,
         }}>
-        <Image source={{uri: imageUri}} style={{width: 400, height: 400}} />
+        <Image 
+          source={{uri: imageUri}} 
+          style={{
+            width: width-60, 
+            height: width-60,
+            borderRadius: 15,
+            // margin: 30,
+          }}
+        />
         </View>
       </View>
     );
