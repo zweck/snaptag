@@ -7,31 +7,81 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   TextInput,
-  Image
+  Image,
+  Button,
+  AlertIOS
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
-import TagInput from 'react-native-tag-input';
+import store from 'react-native-simple-store';
+import changeCase from 'change-case';
 
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
 
 export default class AddTags extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      tags: [],
+      appliedTags: []
+    }
+  }
+
   cancelAddingTags(){
     this.props.navigator.pop();
   }
 
-  tagsChanged(){
+  getTagsFromStore(){
+    let tags = this.props.realm.objects('Tag');
+    this.setState({
+      tags: (
+        tags.reduce((flatTags, tag) => {
+          flatTags.push(tag.name);
+          return flatTags;
+        }, [])
+      )
+    });
+  }
 
+  componentDidMount(){
+    this.getTagsFromStore();
+  }
+
+  toggleTag(tag){
+    let { appliedTags } = this.state;
+
+    if(appliedTags.indexOf(tag) > -1){
+      appliedTags.splice(appliedTags.indexOf(tag), 1);
+    }else{
+      appliedTags.push(tag);
+    }
+
+    this.setState({ appliedTags });
+  }
+
+  addNewTag(tag){
+    this.props.realm.write(() => {
+      let tags = this.props.realm.objects('Tag');
+      this.props.realm.create('Tag', { name: tag });
+    });
+    this.getTagsFromStore();
   }
 
   render(){
 
     let {
+      tags
+    } = this.state;
+
+    let {
       selectedImages,
       current
     } = this.props.route;
+
+    tags = tags || [];
 
     let imageUri = current.uri;
     let imageCount = selectedImages.length;
@@ -127,16 +177,51 @@ export default class AddTags extends Component {
                 />
               </View>
             </View>
-            <TagInput
-              value={[
-                'Tag 1',
-                'Tag 2',
-                'Tag 3',
-                'Tag 4',
-                'Tag 5',
-              ]}
-              onChange={ this.tagsChanged.bind(this) }
-            />
+            <View style={{
+              flex: 1,
+              backgroundColor: 'white',
+              borderRadius: 5,
+              borderColor: '#ccc',
+              borderWidth: 1,
+              margin: 10,
+              overflow: 'hidden'
+            }}>
+              <Text style={{
+                  color: '#ccc',
+                  borderStyle: 'solid',
+                  borderBottomColor: '#eee',
+                  borderBottomWidth: 1,
+                }}
+              > Select tags to add </Text>
+              <View style={{
+                flex: 1,
+                flexDirection: 'row',
+              }}>
+                <Button
+                  color='#0BD318'
+                  onPress={() => (
+                    AlertIOS.prompt(
+                      'Add New Tag',
+                      null,
+                      this.addNewTag.bind(this)
+                    ))
+                  }
+                  title='Add New'
+                  accessibilityLabel='Button to add a new tag'
+                />
+                {
+                  tags.map( tag => (
+                    <Button
+                      color={ this.state.appliedTags.indexOf(tag) > -1 ? '#007AFF' : '#ccc' }
+                      key={tag}
+                      onPress={() => this.toggleTag(tag)}
+                      title={tag}
+                      accessibilityLabel={`Button to remove a tag named ${tag}`}
+                    />
+                  ))
+                }
+              </View>
+            </View>
           </ScrollView>
         </KeyboardAvoidingView>
       </View>

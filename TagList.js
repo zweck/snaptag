@@ -10,22 +10,26 @@ import {
 import SearchBar from 'react-native-search-bar';
 import NavigationBar from 'react-native-navbar';
 
-export default class snaptag extends Component {
+export default class TagList extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.initialOfferState = [
-      'Tag 1', 
-      'Tag 2', 
-      'Tag 3', 
-      'Tag 4', 
-      'Tag 5', 
-      'Tag 6', 
-    ]
     this.state = {
-      dataSource: this.ds.cloneWithRows(this.initialOfferState),
+      dataSource: this.ds.cloneWithRows([]),
     };
+  }
+
+  componentDidMount(){
+    let tags = this.props.realm.objects('Tag');
+    this.setState({
+      dataSource: this.ds.cloneWithRows(
+        tags.reduce((flatTags, tag) => {
+          flatTags.push(tag.name);
+          return flatTags;
+        }, [])
+      )
+    });
   }
 
   closeTags(){
@@ -63,6 +67,7 @@ export default class snaptag extends Component {
             placeholder='Search Tags'
           />
           <ListView
+            enableEmptySections
             dataSource={this.state.dataSource}
             style={{paddingBottom: 20}}
             renderRow={(rowData) => (

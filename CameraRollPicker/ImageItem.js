@@ -38,7 +38,7 @@ class ImageItem extends Component {
         onPress={() => this._handleClick(image)}>
         <Image
           source={{uri: image.uri}}
-          style={{height: this._imageSize, width: this._imageSize, borderRadius: 5}} >
+          style={{height: this._imageSize, width: this._imageSize}} >
           { (selected) ? marker : null }
         </Image>
       </TouchableOpacity>

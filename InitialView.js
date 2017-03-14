@@ -24,7 +24,7 @@ export default class InitialView extends Component {
     this.state = {
       isSelectable: false,
       selectedImages: [],
-      current: {}
+      current: {},
     };
   }
 
@@ -115,10 +115,9 @@ export default class InitialView extends Component {
         }}>
           <CameraRollPicker
             callback={this.getSelectedImages.bind(this)}
-            imagesPerRow={ 2 }
-            groupTypes={ 'All' }
+            imagesPerRow={ 3 }
             selected={this.state.selectedImages}
-            imageMargin={ 15 }
+            imageMargin={ 5 }
             backgroundColor={ '#f0f0f0' }
             maximum={ 100 }
           />

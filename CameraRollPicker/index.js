@@ -45,7 +45,7 @@ class CameraRollPicker extends Component {
     var {groupTypes, assetType} = this.props;
 
     var fetchParams = {
-      first: 1000,
+      first: 5000,
       groupTypes: groupTypes,
       assetType: assetType,
     };
