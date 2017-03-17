@@ -14,8 +14,12 @@ import store from 'react-native-simple-store';
 import Realm from 'realm';
 
 import { TagSchema } from './orm/TagSchema';
+import { ImageSchema } from './orm/ImageSchema';
 
-const realm = new Realm({schema: [TagSchema]});
+const realm = new Realm({
+  schema: [TagSchema, ImageSchema],
+  schemaVersion: 1
+});
 
 function renderScene(route, navigator) {
   return (
@@ -40,16 +44,11 @@ function configureScene(route, routeStack){
 
 class Snaptag extends Component {
 
-  constructor(props){
-    super(props);
-  }
-
   componentDidMount(){
     // Create Realm objects and write to local storage
     realm.write(() => {
+      realm.deleteAll();
       let tags = realm.objects('Tag');
-      realm.delete(tags);
-
       realm.create('Tag', { name: 'Tag1' });
       realm.create('Tag', { name: 'Tag2' });
       realm.create('Tag', { name: 'Tag3' });

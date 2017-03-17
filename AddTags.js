@@ -36,28 +36,46 @@ export default class AddTags extends Component {
 
   getTagsFromStore(){
     let tags = this.props.realm.objects('Tag');
-    this.setState({
-      tags: (
-        tags.reduce((flatTags, tag) => {
-          flatTags.push(tag.name);
-          return flatTags;
-        }, [])
-      )
-    });
+    this.setState({ tags });
   }
 
   componentDidMount(){
     this.getTagsFromStore();
   }
 
-  toggleTag(tag){
+  imageHasTag({ imageFromStore, tag }){
+    return Object.keys(imageFromStore).some(image => {
+      return Object.keys(imageFromStore[image].tags).some( imageTag => {
+        return imageFromStore[image].tags[imageTag].name === tag.name;
+      });
+    });
+  }
+
+  toggleTag(newTag){
     let { appliedTags } = this.state;
 
-    if(appliedTags.indexOf(tag) > -1){
-      appliedTags.splice(appliedTags.indexOf(tag), 1);
+    if(appliedTags.some( appliedTag => appliedTag.name === newTag.name )){
+      appliedTags = appliedTags.filter( appliedTag => appliedTag.name !== newTag.name );
     }else{
-      appliedTags.push(tag);
+      appliedTags.push(newTag);
     }
+
+    this.props.realm.write(() => {
+      let images = this.props.realm.objects('Image');
+      let tags = this.props.realm.objects('Tag');
+      this.props.route.selectedImages.forEach( ({ uri }) => {
+        let imageFromStore = images.filtered(`uri = "${ uri }"`);
+        if( !Object.keys(imageFromStore).length ) {
+          this.props.realm.create('Image', { uri, tags: appliedTags });
+        }else{
+          imageFromStore['0'].tags = tags.reduce( (tagToSetToImage, nextTag, index) => {
+            let tagToAdd = appliedTags.find( appliedTag => appliedTag.name === nextTag.name )
+            if(tagToAdd) tagToSetToImage.push(tagToAdd);
+            return tagToSetToImage
+          }, []);
+        }
+      });
+    });
 
     this.setState({ appliedTags });
   }
@@ -212,11 +230,11 @@ export default class AddTags extends Component {
                 {
                   tags.map( tag => (
                     <Button
-                      color={ this.state.appliedTags.indexOf(tag) > -1 ? '#007AFF' : '#ccc' }
-                      key={tag}
+                      color={ this.state.appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#007AFF' : '#ccc' }
+                      key={ tag.name }
                       onPress={() => this.toggleTag(tag)}
-                      title={tag}
-                      accessibilityLabel={`Button to remove a tag named ${tag}`}
+                      title={ tag.name }
+                      accessibilityLabel={`Button to remove a tag named ${tag.name}`}
                     />
                   ))
                 }
