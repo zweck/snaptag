@@ -9,7 +9,8 @@ import {
   TextInput,
   Image,
   Button,
-  AlertIOS
+  AlertIOS,
+  TouchableOpacity
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
@@ -245,8 +246,16 @@ export default class AddTags extends Component {
                 flex: 1,
                 flexDirection: 'row',
               }}>
-                <Button
-                  color='#0BD318'
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 5,
+                    backgroundColor: '#0BD318',
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    margin: 5
+                  }}
                   onPress={() => (
                     AlertIOS.prompt(
                       'Add New Tag',
@@ -254,18 +263,28 @@ export default class AddTags extends Component {
                       this.addNewTag.bind(this)
                     ))
                   }
-                  title='Add New'
                   accessibilityLabel='Button to add a new tag'
-                />
+                >
+                  <Text style={{color: '#fff'}}>Add New</Text>
+                </TouchableOpacity>
                 {
                   tags.map( tag => (
-                    <Button
-                      color={ appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#007AFF' : '#ccc' }
+                    <TouchableOpacity
                       key={ tag.name }
+                      style={{
+                        borderRadius: 5,
+                        backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        margin: 5
+                      }}
                       onPress={() => this.toggleTag(tag)}
-                      title={ tag.name }
                       accessibilityLabel={`Button to remove a tag named ${tag.name}`}
-                    />
+                    >
+                      <Text style={{color: '#fff'}}>{ tag.name }</Text>
+                    </TouchableOpacity>
                   ))
                 }
               </View>
