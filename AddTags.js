@@ -26,11 +26,12 @@ export default class AddTags extends Component {
     super(props);
     this.state = {
       tags: [],
-      appliedTags: []
+      appliedTags: [],
+      appliedTagsCloned: []
     }
   }
 
-  cancelAddingTags(){
+  dismissModal(){
     this.props.navigator.pop();
   }
 
@@ -39,8 +40,20 @@ export default class AddTags extends Component {
     this.setState({ tags });
   }
 
+  setTagsOnState(){
+    let storedImages = this.props.realm.objects('Image');
+    let current = this.props.route.selectedImages[0];
+    let currentImageFromStore = storedImages.filtered(`uri = "${current.uri}"`);
+    if(currentImageFromStore[0] && this.props.route.selectedImages.length === 1){
+      this.setState({ appliedTags: currentImageFromStore[0].tags });
+    }
+  }
+
   componentDidMount(){
     this.getTagsFromStore();
+    if(!this.props.current){
+      this.setTagsOnState();
+    }
   }
 
   imageHasTag({ imageFromStore, tag }){
@@ -51,16 +64,11 @@ export default class AddTags extends Component {
     });
   }
 
-  toggleTag(newTag){
-    let { appliedTags } = this.state;
-
-    if(appliedTags.some( appliedTag => appliedTag.name === newTag.name )){
-      appliedTags = appliedTags.filter( appliedTag => appliedTag.name !== newTag.name );
-    }else{
-      appliedTags.push(newTag);
-    }
-
+  applyTags(){
     this.props.realm.write(() => {
+
+      let { appliedTags } = this.state;
+
       let images = this.props.realm.objects('Image');
       let tags = this.props.realm.objects('Tag');
       this.props.route.selectedImages.forEach( ({ uri }) => {
@@ -77,7 +85,22 @@ export default class AddTags extends Component {
       });
     });
 
-    this.setState({ appliedTags });
+    this.dismissModal();
+  }
+
+  toggleTag(newTag){
+    this.props.realm.write(() => {
+
+      let { appliedTags } = this.state;
+
+      if(appliedTags.some( appliedTag => appliedTag.name === newTag.name )){
+        appliedTags = Array.from(appliedTags).filter( appliedTag => appliedTag.name !== newTag.name );
+      }else{
+        appliedTags.push(newTag);
+      }
+
+      this.setState({ appliedTags });
+    });
   }
 
   addNewTag(tag){
@@ -91,7 +114,8 @@ export default class AddTags extends Component {
   render(){
 
     let {
-      tags
+      tags,
+      appliedTags
     } = this.state;
 
     let {
@@ -99,12 +123,14 @@ export default class AddTags extends Component {
       current
     } = this.props.route;
 
+    current = current || selectedImages[0];
+
     tags = tags || [];
 
     let imageUri = current.uri;
-    let imageCount = selectedImages.length;
+    let imageCount = selectedImages.length ? selectedImages.length : 1;
     let titleConfig = {
-      title: `Tag ${imageCount} images`
+      title: `Tag ${imageCount} image${ selectedImages.length > 1 ? 's' : '' }`
     }
     return(
       <View style={styles.container}>
@@ -120,7 +146,11 @@ export default class AddTags extends Component {
             leftButton={{
               title: 'Cancel',
               tintColor: 'red',
-              handler: this.cancelAddingTags.bind(this)
+              handler: this.dismissModal.bind(this)
+            }}
+            rightButton={{
+              title: 'Done',
+              handler: this.applyTags.bind(this)
             }}
           />
           <ScrollView
@@ -141,7 +171,7 @@ export default class AddTags extends Component {
               borderRadius: 5,
             }}>
               {
-                selectedImages[1] ? (
+                selectedImages[2] ? (
                   <View style={{
                     position: 'absolute',
                     marginTop: 10,
@@ -162,7 +192,7 @@ export default class AddTags extends Component {
                 ) : (null)
               }
               {
-                selectedImages[0] ? (
+                selectedImages[1] ? (
                   <View style={{
                     position: 'absolute',
                     marginTop: -5,
@@ -230,7 +260,7 @@ export default class AddTags extends Component {
                 {
                   tags.map( tag => (
                     <Button
-                      color={ this.state.appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#007AFF' : '#ccc' }
+                      color={ appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#007AFF' : '#ccc' }
                       key={ tag.name }
                       onPress={() => this.toggleTag(tag)}
                       title={ tag.name }

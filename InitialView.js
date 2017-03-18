@@ -37,9 +37,9 @@ export default class InitialView extends Component {
     if(!this.state.isSelectable){
       this.setState({ selectedImages: [] });
       this.props.navigator.push({
-        component: ImageView,
+        component: AddTags,
         type: 'Modal',
-        currentUri: current.uri
+        selectedImages: [current]
       });
     }
   }
