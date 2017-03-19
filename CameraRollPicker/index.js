@@ -6,6 +6,7 @@ import {
   View,
   Text,
   ListView,
+  ScrollView,
   ActivityIndicator,
 } from 'react-native';
 
@@ -98,16 +99,18 @@ class CameraRollPicker extends Component {
     } = this.props;
 
     var listViewOrEmptyText = dataSource.getRowCount() > 0 ? (
-      <ListView
-        style={{flex: 1, paddingTop: 15, marginBottom: -15}}
-        scrollRenderAheadDistance={scrollRenderAheadDistance}
-        initialListSize={initialListSize}
-        pageSize={pageSize}
-        removeClippedSubviews={removeClippedSubviews}
-        renderFooter={this._renderFooterSpinner.bind(this)}
-        onEndReached={this._onEndReached.bind(this)}
-        dataSource={dataSource}
-        renderRow={rowData => this._renderRow(rowData)} />
+      <ScrollView keyboardDismissMode='interactive' >
+        <ListView
+          style={{flex: 1, paddingTop: 15, marginBottom: -15}}
+          scrollRenderAheadDistance={scrollRenderAheadDistance}
+          initialListSize={initialListSize}
+          pageSize={pageSize}
+          removeClippedSubviews={removeClippedSubviews}
+          renderFooter={this._renderFooterSpinner.bind(this)}
+          onEndReached={this._onEndReached.bind(this)}
+          dataSource={dataSource}
+          renderRow={rowData => this._renderRow(rowData)} />
+        </ScrollView>
     ) : (
       <Text style={[{textAlign: 'center'}, emptyTextStyle]}>{emptyText}</Text>
     );
