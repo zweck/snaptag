@@ -4,7 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Image
+  Image,
+  AlertIOS
 } from 'react-native';
 
 import SearchBar from 'react-native-search-bar';
@@ -20,7 +21,7 @@ export default class TagList extends Component {
     };
   }
 
-  componentDidMount(){
+  getTagsFromStore(){
     let tags = this.props.realm.objects('Tag');
     this.setState({
       dataSource: this.ds.cloneWithRows(
@@ -30,6 +31,18 @@ export default class TagList extends Component {
         }, [])
       )
     });
+  }
+
+  componentDidMount(){
+    this.getTagsFromStore();
+  }
+
+  addNewTag(tag){
+    this.props.realm.write(() => {
+      let tags = this.props.realm.objects('Tag');
+      this.props.realm.create('Tag', { name: tag });
+    });
+    this.getTagsFromStore();
   }
 
   closeTags(){
@@ -51,8 +64,14 @@ export default class TagList extends Component {
             title: 'Tags'
           }}
           leftButton={{
-            title: '+',
-            handler: this.closeTags.bind(this)
+            title: '  +  ',
+            handler: () => (
+              AlertIOS.prompt(
+                'Add New Tag',
+                null,
+                this.addNewTag.bind(this)
+              )
+            )
           }}
           rightButton={{
             title: 'Done',
