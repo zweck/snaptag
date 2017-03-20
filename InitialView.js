@@ -3,7 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  Dimensions
+  Dimensions,
+  TouchableOpacity
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
@@ -25,11 +26,26 @@ export default class InitialView extends Component {
       isSelectable: false,
       selectedImages: [],
       current: {},
+      showResultsView: false,
+      tags: [],
+      appliedTags: [],
     };
+  }
+
+  getTagsFromStore(){
+    let tags = this.props.realm.objects('Tag');
+    this.setState({ tags });
   }
 
   toggleSelect(){
     this.setState({ isSelectable: !this.state.isSelectable });
+  }
+
+  toggleResultsView(){
+    if(!this.state.showResultsView){
+      this.getTagsFromStore();
+    }
+    this.setState({ showResultsView: !this.state.showResultsView });
   }
 
   getSelectedImages(images, current){
@@ -68,6 +84,12 @@ export default class InitialView extends Component {
   }
 
   render() {
+    let {
+      showResultsView,
+      tags,
+      appliedTags
+    } = this.state;
+
     let rightButtonConfig = this.state.isSelectable ? {
       title: 'Add Tags',
       handler: this.openAddTagModal.bind(this)
@@ -106,7 +128,45 @@ export default class InitialView extends Component {
         <SearchBar
           ref='searchBar'
           placeholder='Search Photos'
+          onFocus={ this.toggleResultsView.bind(this) }
+          onBlur={ this.toggleResultsView.bind(this) }
         />
+        {
+          showResultsView ? (
+              <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'flex-start',
+                backgroundColor: 'white',
+                borderRadius: 5,
+                borderColor: '#ccc',
+                borderWidth: 1,
+                margin: 10,
+              }}>
+                {
+                  tags.map( tag => (
+                    <TouchableOpacity
+                      key={ tag.name }
+                      style={{
+                        borderRadius: 5,
+                        backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        margin: 5
+                      }}
+                      onPress={() => this.toggleTag(tag)}
+                      accessibilityLabel={`Button to remove a tag named ${tag.name}`}
+                    >
+                      <Text style={{color: '#fff'}}>{ tag.name }</Text>
+                    </TouchableOpacity>
+                  ))
+                }
+              </View>
+          ) : (null)
+        }
         <View style={{
           flex: 1,
           marginTop: -15,

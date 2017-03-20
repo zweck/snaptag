@@ -245,6 +245,8 @@ export default class AddTags extends Component {
               <View style={{
                 flex: 1,
                 flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'flex-start'
               }}>
                 <TouchableOpacity
                   style={{

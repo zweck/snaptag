@@ -5,10 +5,9 @@ import {
   Text,
   View,
   Image,
-  AlertIOS
 } from 'react-native';
 
-import SearchBar from 'react-native-search-bar';
+import Swipeout from 'react-native-animated-swipeout';
 import NavigationBar from 'react-native-navbar';
 
 export default class TagList extends Component {
@@ -24,24 +23,11 @@ export default class TagList extends Component {
   getTagsFromStore(){
     let tags = this.props.realm.objects('Tag');
     this.setState({
-      dataSource: this.ds.cloneWithRows(
-        tags.reduce((flatTags, tag) => {
-          flatTags.push(tag.name);
-          return flatTags;
-        }, [])
-      )
+      dataSource: this.ds.cloneWithRows( tags )
     });
   }
 
   componentDidMount(){
-    this.getTagsFromStore();
-  }
-
-  addNewTag(tag){
-    this.props.realm.write(() => {
-      let tags = this.props.realm.objects('Tag');
-      this.props.realm.create('Tag', { name: tag });
-    });
     this.getTagsFromStore();
   }
 
@@ -51,6 +37,22 @@ export default class TagList extends Component {
 
   render(){
     let imageUri = this.props.route.selectedImage;
+
+    const swipeoutBtns = (rowData) => ([
+      {
+        text: 'Delete',
+        backgroundColor: 'red',
+        onPress: () => {
+          this.props.realm.write(() => {
+            let tags = this.props.realm.objects('Tag');
+            let tagToDelete = tags.filtered('name == $0', rowData.name);
+            this.props.realm.delete(tagToDelete);
+            this.getTagsFromStore();
+          });
+        }
+      }
+    ]);
+
     return(
       <View style={styles.container}>
         <NavigationBar
@@ -63,16 +65,6 @@ export default class TagList extends Component {
           title={{
             title: 'Tags'
           }}
-          leftButton={{
-            title: '  +  ',
-            handler: () => (
-              AlertIOS.prompt(
-                'Add New Tag',
-                null,
-                this.addNewTag.bind(this)
-              )
-            )
-          }}
           rightButton={{
             title: 'Done',
             handler: this.closeTags.bind(this)
@@ -81,27 +73,28 @@ export default class TagList extends Component {
         <View style={{
           flex: 1,
         }}>
-          <SearchBar
-            ref='searchBar'
-            placeholder='Search Tags'
-          />
           <ListView
             enableEmptySections
             dataSource={this.state.dataSource}
             style={{paddingBottom: 20}}
-            renderRow={(rowData) => (
-              <View style={{
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                padding: 20,
-                borderTopColor: '#ccc',
-                borderStyle: 'solid',
-                borderTopWidth: 1,
-              }}>
-                <Text>
-                  {rowData}
-                </Text>
-              </View>
+            renderRow={( rowData ) => (
+
+              <Swipeout autoClose right={swipeoutBtns(rowData)}>
+                <View style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  padding: 20,
+                  borderTopColor: '#ccc',
+                  borderStyle: 'solid',
+                  borderTopWidth: 1,
+                  backgroundColor: '#fff',
+                }}>
+                  <Text numberOfLines={0} ellipsizeMode='tail'>
+                    { rowData.name }
+                  </Text>
+                </View>
+              </Swipeout>
+
             )}
           />
         </View>
