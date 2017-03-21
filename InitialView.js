@@ -4,7 +4,9 @@ import {
   Text,
   View,
   Dimensions,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
+  Image,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
@@ -29,7 +31,30 @@ export default class InitialView extends Component {
       showResultsView: false,
       tags: [],
       appliedTags: [],
+      filteredImages: [],
     };
+  }
+
+  componentDidMount(){
+    this.getTagsFromStore();
+  }
+
+  addToFilter(newTag){
+    let { appliedTags } = this.state;
+    if(appliedTags.some( appliedTag => appliedTag.name === newTag.name )){
+      appliedTags = Array.from(appliedTags).filter( appliedTag => appliedTag.name !== newTag.name );
+    }else{
+      appliedTags.push(newTag);
+    }
+
+    this.setState({ appliedTags }, () => {
+      let images = this.props.realm.objects('Image');
+      let filteredImages = Array.from(images).filter(image => 
+        image.tags.some( tag => appliedTags.some( appliedTag => appliedTag.name === tag.name ) )
+      );
+      this.setState({ filteredImages });
+    });
+
   }
 
   getTagsFromStore(){
@@ -87,7 +112,8 @@ export default class InitialView extends Component {
     let {
       showResultsView,
       tags,
-      appliedTags
+      appliedTags,
+      filteredImages
     } = this.state;
 
     let rightButtonConfig = this.state.isSelectable ? {
@@ -125,63 +151,97 @@ export default class InitialView extends Component {
           rightButton={ rightButtonConfig }
           leftButton={ leftButtonConfig }
         />
-        <SearchBar
+        {/*<SearchBar
           ref='searchBar'
           placeholder='Search Photos'
           onFocus={ this.toggleResultsView.bind(this) }
           onBlur={ this.toggleResultsView.bind(this) }
-        />
-        {
-          showResultsView ? (
-              <View style={{
-                flex: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                alignItems: 'flex-start',
-                backgroundColor: 'white',
-                borderRadius: 5,
-                borderColor: '#ccc',
-                borderWidth: 1,
-                margin: 10,
-              }}>
-                {
-                  tags.map( tag => (
-                    <TouchableOpacity
-                      key={ tag.name }
-                      style={{
-                        borderRadius: 5,
-                        backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        margin: 5
-                      }}
-                      onPress={() => this.toggleTag(tag)}
-                      accessibilityLabel={`Button to remove a tag named ${tag.name}`}
-                    >
-                      <Text style={{color: '#fff'}}>{ tag.name }</Text>
-                    </TouchableOpacity>
-                  ))
-                }
-              </View>
-          ) : (null)
-        }
+        />*/}
         <View style={{
           flex: 1,
           marginTop: -15,
           position: 'relative',
           zIndex: -1
         }}>
-          <CameraRollPicker
-            callback={this.getSelectedImages.bind(this)}
-            imagesPerRow={ 3 }
-            selected={this.state.selectedImages}
-            imageMargin={ 5 }
-            backgroundColor={ '#f0f0f0' }
-            maximum={ 100 }
-          />
+          {
+            appliedTags.length ? (
+              <ScrollView
+                style={{
+                  flex: 1,
+                }}
+              >
+
+                <View style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'flex-start',
+                }}>
+
+                  {
+                    filteredImages.map( (image, i) => (
+                      <TouchableOpacity
+                        key={i} 
+                        style={{marginBottom: 5, marginRight: 5}}
+                        onPress={() => this.getSelectedImages(image)}>
+                        <Image 
+                          source={{uri: image.uri}} 
+                          style={{
+                            width: (width/3)-5,
+                            height: (width/3)-5,
+                          }}
+                        />
+                      </TouchableOpacity>
+                    ))
+                  }
+                </View>
+              </ScrollView>
+            ) : (
+              <CameraRollPicker
+                callback={this.getSelectedImages.bind(this)}
+                imagesPerRow={ 3 }
+                selected={this.state.selectedImages}
+                imageMargin={ 5 }
+                backgroundColor={ '#f0f0f0' }
+                maximum={ 10000 }
+              />
+            )
+          }
         </View>
+        <ScrollView style={{ maxHeight: height/5, flex: 1, }}>
+          <View style={{
+            flex: 1,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            alignItems: 'flex-start',
+            backgroundColor: 'white',
+            borderRadius: 5,
+            borderColor: '#ccc',
+            borderWidth: 1,
+            margin: 10,
+          }}>
+            {
+              tags.map( tag => (
+                <TouchableOpacity
+                  key={ tag.name }
+                  style={{
+                    borderRadius: 5,
+                    backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    margin: 5
+                  }}
+                  onPress={() => this.addToFilter(tag)}
+                  accessibilityLabel={`Button to remove a tag named ${tag.name}`}
+                >
+                  <Text style={{color: '#fff'}}>{ tag.name }</Text>
+                </TouchableOpacity>
+              ))
+            }
+          </View>
+        </ScrollView>
       </View>
     );
   }
