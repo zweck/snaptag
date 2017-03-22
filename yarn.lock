@@ -3199,6 +3199,10 @@ react-native-navbar@^1.6.2:
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/react-native-navbar/-/react-native-navbar-1.6.2.tgz#f324f654100423e96df37dedcbeda819f04c03ff"
 
+react-native-photos-framework@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-photos-framework/-/react-native-photos-framework-1.0.1.tgz#f9e3e35f5512c2bd0f3537f6087336cd4a081607"
+
 react-native-search-bar@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-native-search-bar/-/react-native-search-bar-3.0.0.tgz#973b38276d06e1731ed52121e94f54b9aed2bfab"

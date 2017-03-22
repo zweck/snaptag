@@ -36,6 +36,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* snaptagTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* snaptagTests.m */; };
 		4D023F2CF31D48E9A981BDF6 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C798FCB94F3E410996E78B06 /* libRealmReact.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		60E3EF912FD94937B4F48639 /* libRNPhotosFramework.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D858D1BF411461D91CC5413 /* libRNPhotosFramework.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		9903FB13723942DD8AC891D4 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 6481BE57B10E4614A8833228 /* libz.tbd */; };
 		B66CFB858D1B48639003D19C /* libRNSearchBar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 98EAD61CEB694ECAA86645F1 /* libRNSearchBar.a */; };
@@ -254,6 +255,20 @@
 			remoteGlobalIDString = F60690131CA2766F0003FB26;
 			remoteInfo = RealmReact;
 		};
+		DED10FD11E83177100CE41DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A2BE43406384E16AC94118B /* RNPhotosFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 632F8C131DB758E7007E83E1;
+			remoteInfo = RNPhotosFramework;
+		};
+		DED10FD31E83177100CE41DB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3A2BE43406384E16AC94118B /* RNPhotosFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 632D5ED01DF19458006A862C;
+			remoteInfo = RNPhotosFrameworkTests;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -278,6 +293,8 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* snaptag-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "snaptag-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* snaptag-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "snaptag-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D858D1BF411461D91CC5413 /* libRNPhotosFramework.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNPhotosFramework.a; sourceTree = "<group>"; };
+		3A2BE43406384E16AC94118B /* RNPhotosFramework.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNPhotosFramework.xcodeproj; path = "../node_modules/react-native-photos-framework/ios/RNPhotosFramework.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6481BE57B10E4614A8833228 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -319,6 +336,7 @@
 				4D023F2CF31D48E9A981BDF6 /* libRealmReact.a in Frameworks */,
 				C7D0750ACBDF467F9EF5D33C /* libc++.tbd in Frameworks */,
 				9903FB13723942DD8AC891D4 /* libz.tbd in Frameworks */,
+				60E3EF912FD94937B4F48639 /* libRNPhotosFramework.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -497,6 +515,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				931D7D2203F641C196DE77D4 /* RNSearchBar.xcodeproj */,
 				83955AF7B5C14600ADC6B458 /* RealmReact.xcodeproj */,
+				3A2BE43406384E16AC94118B /* RNPhotosFramework.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -554,6 +573,15 @@
 			isa = PBXGroup;
 			children = (
 				DE64B2BA1E7737130049CEA7 /* libRealmReact.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DED10FB21E83177100CE41DB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DED10FD21E83177100CE41DB /* libRNPhotosFramework.a */,
+				DED10FD41E83177100CE41DB /* RNPhotosFrameworkTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -724,6 +752,10 @@
 				{
 					ProductGroup = DE64B29C1E7737130049CEA7 /* Products */;
 					ProjectRef = 83955AF7B5C14600ADC6B458 /* RealmReact.xcodeproj */;
+				},
+				{
+					ProductGroup = DED10FB21E83177100CE41DB /* Products */;
+					ProjectRef = 3A2BE43406384E16AC94118B /* RNPhotosFramework.xcodeproj */;
 				},
 				{
 					ProductGroup = DE22403B1E6ABBBC00195028 /* Products */;
@@ -937,6 +969,20 @@
 			remoteRef = DE64B2B91E7737130049CEA7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		DED10FD21E83177100CE41DB /* libRNPhotosFramework.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNPhotosFramework.a;
+			remoteRef = DED10FD11E83177100CE41DB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		DED10FD41E83177100CE41DB /* RNPhotosFrameworkTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RNPhotosFrameworkTests.xctest;
+			remoteRef = DED10FD31E83177100CE41DB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1080,12 +1126,14 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-search-bar",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native-photos-framework/ios/RNPhotosFramework/**",
 				);
 				INFOPLIST_FILE = snaptagTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1108,12 +1156,14 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-search-bar",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native-photos-framework/ios/RNPhotosFramework/**",
 				);
 				INFOPLIST_FILE = snaptagTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1137,6 +1187,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-search-bar",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native-photos-framework/ios/RNPhotosFramework/**",
 				);
 				INFOPLIST_FILE = snaptag/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1161,6 +1212,7 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-search-bar",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native-photos-framework/ios/RNPhotosFramework/**",
 				);
 				INFOPLIST_FILE = snaptag/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1191,11 +1243,13 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-search-bar",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native-photos-framework/ios/RNPhotosFramework/**",
 				);
 				INFOPLIST_FILE = "snaptag-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1227,11 +1281,13 @@
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-search-bar",
 					"$(SRCROOT)/../node_modules/realm/src/**",
+					"$(SRCROOT)/../node_modules/react-native-photos-framework/ios/RNPhotosFramework/**",
 				);
 				INFOPLIST_FILE = "snaptag-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
@@ -1264,6 +1320,7 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.snaptag-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1288,6 +1345,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
