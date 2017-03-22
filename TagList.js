@@ -5,6 +5,7 @@ import {
   Text,
   View,
   Image,
+  AlertIOS
 } from 'react-native';
 
 import Swipeout from 'react-native-animated-swipeout';
@@ -17,6 +18,7 @@ export default class TagList extends Component {
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       dataSource: this.ds.cloneWithRows([]),
+      selectedTagName: null
     };
   }
 
@@ -35,6 +37,16 @@ export default class TagList extends Component {
     this.props.navigator.pop();
   }
 
+  editTag(newName){
+    let { selectedTagName } = this.state;
+    this.props.realm.write(() => {
+      let tags = this.props.realm.objects('Tag');
+      let tagToEdit = tags.filtered('name == $0', selectedTagName);
+      tagToEdit[0].name = newName;
+      this.getTagsFromStore();
+    });
+  }
+
   render(){
     let imageUri = this.props.route.selectedImage;
 
@@ -49,6 +61,20 @@ export default class TagList extends Component {
             this.props.realm.delete(tagToDelete);
             this.getTagsFromStore();
           });
+        }
+      },
+      {
+        text: 'Edit',
+        backgroundColor: '#5AC8FB',
+        onPress: () => {
+          this.setState({ selectedTagName: rowData.name });
+          AlertIOS.prompt(
+            'Edit Tag', 
+            null, 
+            this.editTag.bind(this), 
+            'plain-text', 
+            rowData.name
+          )
         }
       }
     ]);

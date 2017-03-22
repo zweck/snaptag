@@ -47,11 +47,9 @@ class Snaptag extends Component {
   componentDidMount(){
     // Create Realm objects and write to local storage
     realm.write(() => {
-      realm.deleteAll();
-      let tags = realm.objects('Tag');
-      realm.create('Tag', { name: 'Tag1' });
-      realm.create('Tag', { name: 'Tag2' });
-      realm.create('Tag', { name: 'Tag3' });
+      realm.create('Tag', { name: 'Family' });
+      realm.create('Tag', { name: 'Vacation' });
+      realm.create('Tag', { name: 'Junk' });
     });
   }
 
