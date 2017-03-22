@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {
-  CameraRoll,
   Platform,
   StyleSheet,
   View,
@@ -9,6 +8,8 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
+
+import RNPhotosFramework from 'react-native-photos-framework';
 
 import ImageItem from './ImageItem';
 
@@ -43,39 +44,36 @@ class CameraRollPicker extends Component {
   }
 
   _fetch() {
-    var {groupTypes, assetType} = this.props;
+    RNPhotosFramework.requestAuthorization().then((statusObj) => {
+      if (statusObj.isAuthorized) {
 
-    var fetchParams = {
-      first: 5000,
-      groupTypes: groupTypes,
-      assetType: assetType,
-    };
-
-    if (Platform.OS === "android") {
-      // not supported in android
-      delete fetchParams.groupTypes;
-    }
-
-    if (this.state.lastCursor) {
-      fetchParams.after = this.state.lastCursor;
-    }
-
-    CameraRoll.getPhotos(fetchParams)
-      .then((data) => this._appendImages(data), (e) => console.log(e));
+        RNPhotosFramework.getAssets({
+          startIndex: 0,
+          endIndex: 5000,
+          fetchOptions : {
+            sourceTypes: ['userLibrary'],
+            sortDescriptors : [
+              {
+                key: 'creationDate',
+                ascending: false,
+              }
+            ]
+          }
+        }).then((response) => this._appendImages(response));
+      }
+    });
   }
 
   _appendImages(data) {
-    var assets = data.edges;
+    var assets = data.assets;
     var newState = {
       loadingMore: false,
     };
 
-    if (!data.page_info.has_next_page) {
-      newState.noMore = true;
-    }
+    newState.noMore = true;
 
     if (assets.length > 0) {
-      newState.lastCursor = data.page_info.end_cursor;
+      newState.lastCursor = true;
       newState.images = this.state.images.concat(assets);
       newState.dataSource = this.state.dataSource.cloneWithRows(
         this._nEveryRow(newState.images, this.props.imagesPerRow)
@@ -132,7 +130,7 @@ class CameraRollPicker extends Component {
       containerWidth
     } = this.props;
 
-    var uri = item.node.image.uri;
+    var uri = item.uri;
     var isSelected = (this._arrayObjectIndexOf(selected, 'uri', uri) >= 0) ? true : false;
 
     return (
