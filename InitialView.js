@@ -74,6 +74,7 @@ export default class InitialView extends Component {
   }
 
   getSelectedImages(images, current){
+    if(!current) current = Array.isArray(images) ? images[0] : images;
     this.setState({ selectedImages: images, current });
     if(!this.state.isSelectable){
       this.setState({ selectedImages: [] });

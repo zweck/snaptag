@@ -4,12 +4,15 @@ import {
   StyleSheet,
   View,
   Text,
+  Dimensions,
   ListView,
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
 
 import RNPhotosFramework from 'react-native-photos-framework';
+
+const { WINDOW_WIDTH, WINDOW_HEIGHT } = Dimensions.get('window');
 
 import ImageItem from './ImageItem';
 
@@ -50,6 +53,7 @@ class CameraRollPicker extends Component {
         RNPhotosFramework.getAssets({
           startIndex: 0,
           endIndex: 5000,
+          prepareForSizeDisplay: {width: WINDOW_WIDTH, height: WINDOW_WIDTH},
           fetchOptions : {
             sourceTypes: ['userLibrary'],
             sortDescriptors : [

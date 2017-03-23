@@ -26,7 +26,7 @@ class ImageItem extends Component {
 
     var marker = selectedMarker ? selectedMarker :
         <Image
-          style={[styles.marker, {width: 25, height: 25}]}
+          style={[styles.marker, {width: this._imageSize, height: this.__imageSize}]}
           source={require('./circle-check.png')}
           />;
 
