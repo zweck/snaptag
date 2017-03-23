@@ -50,7 +50,7 @@ export default class InitialView extends Component {
     this.setState({ appliedTags }, () => {
       let images = this.props.realm.objects('Image');
       let filteredImages = Array.from(images).filter(image => 
-        image.tags.some( tag => appliedTags.some( appliedTag => appliedTag.name === tag.name ) )
+        appliedTags.every( appliedTag => image.tags.some( tag => appliedTag.name === tag.name ) )
       );
       this.setState({ filteredImages });
     });
