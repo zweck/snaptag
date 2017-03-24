@@ -6,9 +6,12 @@ import {
   Text,
   View
 } from 'react-native';
+import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 
 import NavigationBar from 'react-native-navbar';
 import InitialView from './InitialView';
+import CameraView from './CameraView';
+import TagList from './TagList';
 
 import store from 'react-native-simple-store';
 import Realm from 'realm';
@@ -44,6 +47,15 @@ function configureScene(route, routeStack){
 
 class Snaptag extends Component {
 
+  state = {
+    index: 1,
+    routes: [
+      { key: '1', title: 'Camera' },
+      { key: '2', title: 'Photos' },
+      { key: '3', title: '    #    ' },
+    ],
+  }
+
   componentDidMount(){
     // Create Realm objects and write to local storage
     realm.write(() => {
@@ -56,21 +68,81 @@ class Snaptag extends Component {
     });
   }
 
-  render() {
-    const initialRoute = {
-      component: InitialView
-    };
-
+  _renderFooter = (props) => {
     return (
-      <View style={{ flex: 1, }}>
-        <Navigator
-          initialRoute={initialRoute}
-          renderScene={renderScene}
-          configureScene={configureScene}
-        />
-      </View>
+      <TabBar
+        {...props}
+        style={styles.tabbar}
+        indicatorStyle={styles.indicator}
+        tabStyle={styles.tab}
+      />
+    );
+  }
+
+  _renderScene = ({ route }) => {
+    switch (route.key) {
+    case '1':
+      return <CameraView />;
+    case '2':
+      const initialRoute = {
+        component: InitialView
+      };
+
+      return (
+        <View style={{ 
+          flex: 1, 
+        }}>
+          <Navigator
+            initialRoute={initialRoute}
+            renderScene={renderScene}
+            configureScene={configureScene}
+          />
+        </View>
+      )
+    case '3':
+      return ( <TagList realm={ realm }/> )
+    default:
+      return null;
+    }
+  }
+
+  _handleChangeTab = (index) => {
+    this.setState({
+      index,
+    });
+  }
+
+  render() {
+    return (
+      <TabViewAnimated
+        style={[ styles.container, this.props.style ]}
+        navigationState={this.state}
+        renderScene={this._renderScene}
+        renderFooter={this._renderFooter}
+        onRequestChangeTab={this._handleChangeTab}
+      />
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  tabbar: {
+    backgroundColor: '#000',
+  },
+  tab: {
+    padding: 0,
+  },
+  indicator: {
+    backgroundColor: '#5AC8FB',
+  },
+  page: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 AppRegistry.registerComponent('snaptag', () => Snaptag);

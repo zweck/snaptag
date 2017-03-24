@@ -33,10 +33,6 @@ export default class TagList extends Component {
     this.getTagsFromStore();
   }
 
-  closeTags(){
-    this.props.navigator.pop();
-  }
-
   editTag(newName){
     let { selectedTagName } = this.state;
     this.props.realm.write(() => {
@@ -48,7 +44,6 @@ export default class TagList extends Component {
   }
 
   render(){
-    let imageUri = this.props.route.selectedImage;
 
     const swipeoutBtns = (rowData) => ([
       {
@@ -82,18 +77,17 @@ export default class TagList extends Component {
     return(
       <View style={styles.container}>
         <NavigationBar
+          statusBar={{
+            tintColor: '#000',
+            style: 'light-content'
+          }}
           style={{
-            borderBottomColor: 'rgba(150,150,150,0.3)',
-            borderStyle: 'solid',
-            borderBottomWidth: 1,
+            backgroundColor: 'black',
             position: 'relative',
           }}
           title={{
-            title: 'Tags'
-          }}
-          rightButton={{
-            title: 'Done',
-            handler: this.closeTags.bind(this)
+            title: 'Tags',
+            tintColor: 'white'
           }}
         />
         <View style={{
@@ -102,20 +96,29 @@ export default class TagList extends Component {
           <ListView
             enableEmptySections
             dataSource={this.state.dataSource}
-            style={{paddingBottom: 20}}
+            style={{paddingBottom: 20,}}
             renderRow={( rowData ) => (
 
-              <Swipeout autoClose right={swipeoutBtns(rowData)}>
+              <Swipeout 
+                style={{ 
+                  backgroundColor: '#000',
+                  borderBottomColor: '#292929',
+                  borderStyle: 'solid',
+                  borderBottomWidth: 1,
+                }} 
+                autoClose 
+                right={swipeoutBtns(rowData)}
+              >
                 <View style={{
                   flexDirection: 'row',
                   justifyContent: 'flex-start',
                   padding: 20,
-                  borderTopColor: '#ccc',
+                  borderTopColor: '#292929',
                   borderStyle: 'solid',
                   borderTopWidth: 1,
-                  backgroundColor: '#fff',
+                  backgroundColor: '#000',
                 }}>
-                  <Text numberOfLines={0} ellipsizeMode='tail'>
+                  <Text style={{ color: '#fff' }} numberOfLines={0} ellipsizeMode='tail'>
                     { rowData.name }
                   </Text>
                 </View>
@@ -132,7 +135,7 @@ export default class TagList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#000',
   },
   cameraRoll: {
     paddingTop: 70

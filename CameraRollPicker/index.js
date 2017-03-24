@@ -103,7 +103,7 @@ class CameraRollPicker extends Component {
     var listViewOrEmptyText = dataSource.getRowCount() > 0 ? (
       <ScrollView keyboardDismissMode='interactive' >
         <ListView
-          style={{flex: 1, paddingTop: 15, marginBottom: -15}}
+          style={{flex: 1, paddingTop: 0, marginBottom: -15}}
           scrollRenderAheadDistance={scrollRenderAheadDistance}
           initialListSize={initialListSize}
           pageSize={pageSize}
@@ -287,7 +287,7 @@ CameraRollPicker.defaultProps = {
   imagesPerRow: 3,
   imageMargin: 5,
   assetType: 'Photos',
-  backgroundColor: 'white',
+  backgroundColor: 'transparent',
   selected: [],
   callback: function(selectedImages, currentImage) {
     console.log(currentImage);

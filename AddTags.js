@@ -131,18 +131,21 @@ export default class AddTags extends Component {
     let imageUri = current.uri;
     let imageCount = selectedImages.length ? selectedImages.length : 1;
     let titleConfig = {
-      title: `Tag ${imageCount} image${ selectedImages.length > 1 ? 's' : '' }`
+      title: `Tag ${imageCount} image${ selectedImages.length > 1 ? 's' : '' }`,
+      tintColor: 'white',
     }
     return(
       <View style={styles.container}>
         <KeyboardAvoidingView behavior='position'>
           <NavigationBar
             style={{
+              backgroundColor: '#000',
               borderBottomColor: 'rgba(150,150,150,0.3)',
               borderStyle: 'solid',
               borderBottomWidth: 1,
               position: 'relative',
             }}
+            tintColor={'#000'}
             title={ titleConfig }
             leftButton={{
               title: 'Cancel',
