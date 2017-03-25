@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { TabViewAnimated, TabBar } from 'react-native-tab-view';
 
-import NavigationBar from 'react-native-navbar';
+import NavigationBar from './NavigationBar';
 import InitialView from './InitialView';
 import CameraView from './CameraView';
 import TagList from './TagList';

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 
 import { BlurView } from 'react-native-blur';
-import NavigationBar from 'react-native-navbar';
+import NavigationBar from './NavigationBar';
 import SearchBar from 'react-native-search-bar';
 
 import CameraRollPicker from './CameraRollPicker';
@@ -130,13 +130,10 @@ export default class InitialView extends Component {
       <View style={styles.container}>
         <NavigationBar
           statusBar={{
-            tintColor: '#000',
             style: 'light-content'
           }}
           style={{
-            backgroundColor: '#000',
-            position: 'relative',
-            zIndex: 2
+            height: 50,
           }}
           title={{
             title: 'All Photos',
@@ -147,11 +144,12 @@ export default class InitialView extends Component {
         />
         <View style={{
           flex: 1,
-          marginTop: 15,
-          position: 'relative',
-          borderRadius: 10,
-          overflow: 'hidden',
+          position: 'absolute',
+          top: 0,
           zIndex: -1,
+          height: height+50,
+          width: width,
+          overflow: 'hidden',
           backgroundColor: '#000',
         }}>
           <View style={{
@@ -162,6 +160,7 @@ export default class InitialView extends Component {
                 <ScrollView
                   style={{
                     flex: 1,
+                    paddingTop: 60,
                   }}
                 >
 
@@ -203,11 +202,9 @@ export default class InitialView extends Component {
           </View>
           <ScrollView 
             style={{ 
-              maxHeight: height/8, 
               flex: 1,
-              position: 'absolute',
-              bottom: 0,
-              width: width,
+              maxHeight: height/8, 
+              top: -50,
             }}
           >
             <BlurView 
@@ -220,6 +217,7 @@ export default class InitialView extends Component {
                 alignItems: 'flex-start',
                 paddingTop: 10,
                 paddingBottom: 10,
+                marginBottom: 30,
               }}
             >
               {

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import Swipeout from 'react-native-animated-swipeout';
-import NavigationBar from 'react-native-navbar';
+import NavigationBar from './NavigationBar';
 
 export default class TagList extends Component {
 

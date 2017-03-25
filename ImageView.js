@@ -7,7 +7,7 @@ import {
   Image
 } from 'react-native';
 
-import NavigationBar from 'react-native-navbar';
+import NavigationBar from './NavigationBar';
 
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
@@ -23,14 +23,15 @@ export default class ImageView extends Component {
     return(
       <View style={styles.container}>
         <NavigationBar
+          statusBar={{
+            style: 'light-content'
+          }}
           style={{
-            borderBottomColor: 'rgba(150,150,150,0.3)',
-            borderStyle: 'solid',
-            borderBottomWidth: 1,
-            position: 'relative',
+            height: 50,
           }}
           title={{
-            title: 'Image'
+            title: 'Image',
+            tintColor: 'white'
           }}
           leftButton={{
             title: 'Done',
@@ -67,7 +68,7 @@ export default class ImageView extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#000',
   },
   cameraRoll: {
     paddingTop: 70

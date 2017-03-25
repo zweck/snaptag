@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+import { BlurView } from 'react-native-blur';
+
 class ImageItem extends Component {
   constructor(props){
     super(props)
@@ -23,21 +25,29 @@ class ImageItem extends Component {
 
   render() {
     var {item, selected, selectedMarker, imageMargin} = this.props;
-
-    var marker = selectedMarker ? selectedMarker :
-        <Image
-          style={[styles.marker, {width: this._imageSize, height: this.__imageSize}]}
-          source={require('./circle-check.png')}
-          />;
+    let imageSize = selected ? this._imageSize-10 : this._imageSize;
 
     return (
       <TouchableOpacity
-        style={{marginBottom: imageMargin, marginRight: imageMargin}}
+        style={{
+          position: 'relative', 
+          marginBottom: imageMargin, 
+          marginRight: imageMargin,
+          borderColor: '#5AC8FB',
+          borderWidth: selected ? 5 : 0,
+        }}
         onPress={() => this._handleClick(item)}>
         <Image
           source={{uri: item.uri}}
-          style={{height: this._imageSize, width: this._imageSize}} >
-          { (selected) ? marker : null }
+          style={{height: imageSize, width: imageSize}} >
+          { (selected) ? (
+              <BlurView 
+                blurType="dark" 
+                blurAmount={10}
+                style={{height: imageSize, width: imageSize}}
+              />
+            ) : null 
+          }
         </Image>
       </TouchableOpacity>
     );

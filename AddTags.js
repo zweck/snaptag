@@ -13,7 +13,7 @@ import {
   TouchableOpacity
 } from 'react-native';
 
-import NavigationBar from 'react-native-navbar';
+import NavigationBar from './NavigationBar';
 import store from 'react-native-simple-store';
 import changeCase from 'change-case';
 
@@ -138,14 +138,12 @@ export default class AddTags extends Component {
       <View style={styles.container}>
         <KeyboardAvoidingView behavior='position'>
           <NavigationBar
-            style={{
-              backgroundColor: '#000',
-              borderBottomColor: 'rgba(150,150,150,0.3)',
-              borderStyle: 'solid',
-              borderBottomWidth: 1,
-              position: 'relative',
+            statusBar={{
+              style: 'light-content'
             }}
-            tintColor={'#000'}
+            style={{
+              height: 50,
+            }}
             title={ titleConfig }
             leftButton={{
               title: 'Cancel',
@@ -231,18 +229,12 @@ export default class AddTags extends Component {
             </View>
             <View style={{
               flex: 1,
-              backgroundColor: 'white',
               borderRadius: 5,
-              borderColor: '#ccc',
-              borderWidth: 1,
               margin: 10,
-              overflow: 'hidden'
             }}>
               <Text style={{
                   color: '#ccc',
                   borderStyle: 'solid',
-                  borderBottomColor: '#eee',
-                  borderBottomWidth: 1,
                 }}
               > Select tags to add </Text>
               <View style={{
@@ -270,7 +262,7 @@ export default class AddTags extends Component {
                   }
                   accessibilityLabel='Button to add a new tag'
                 >
-                  <Text style={{color: '#fff'}}>Add New</Text>
+                  <Text style={{color: '#000'}}>Add New</Text>
                 </TouchableOpacity>
                 {
                   tags.map( tag => (
@@ -288,7 +280,7 @@ export default class AddTags extends Component {
                       onPress={() => this.toggleTag(tag)}
                       accessibilityLabel={`Button to remove a tag named ${tag.name}`}
                     >
-                      <Text style={{color: '#fff'}}>{ tag.name }</Text>
+                      <Text style={{color: '#000'}}>{ tag.name }</Text>
                     </TouchableOpacity>
                   ))
                 }
@@ -304,7 +296,7 @@ export default class AddTags extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#000',
     height: height
   },
   cameraRoll: {

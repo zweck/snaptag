@@ -53,6 +53,7 @@ class CameraRollPicker extends Component {
         RNPhotosFramework.getAssets({
           startIndex: 0,
           endIndex: 5000,
+          preCacheAssets: true,
           prepareForSizeDisplay: {width: WINDOW_WIDTH, height: WINDOW_WIDTH},
           fetchOptions : {
             sourceTypes: ['userLibrary'],
@@ -103,7 +104,7 @@ class CameraRollPicker extends Component {
     var listViewOrEmptyText = dataSource.getRowCount() > 0 ? (
       <ScrollView keyboardDismissMode='interactive' >
         <ListView
-          style={{flex: 1, paddingTop: 0, marginBottom: -15}}
+          style={{flex: 1, paddingTop: 65,  paddingBottom: 65, marginBottom: -15}}
           scrollRenderAheadDistance={scrollRenderAheadDistance}
           initialListSize={initialListSize}
           pageSize={pageSize}
