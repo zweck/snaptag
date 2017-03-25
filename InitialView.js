@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ListView,
 } from 'react-native';
 
 import { BlurView } from 'react-native-blur';
@@ -24,14 +25,16 @@ const ASPECT_RATIO = width / height;
 export default class InitialView extends Component {
   constructor(props){
     super(props);
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
     this.state = {
+      dataSource: this.ds.cloneWithRows([]),
       isSelectable: false,
       selectedImages: [],
       current: {},
       showResultsView: false,
       tags: [],
       appliedTags: [],
-      filteredImages: [],
     };
   }
 
@@ -52,7 +55,9 @@ export default class InitialView extends Component {
       let filteredImages = Array.from(images).filter(image => 
         appliedTags.every( appliedTag => image.tags.some( tag => appliedTag.name === tag.name ) )
       );
-      this.setState({ filteredImages });
+      this.setState({
+        dataSource: this.ds.cloneWithRows( filteredImages )
+      });
     });
 
   }
@@ -107,7 +112,6 @@ export default class InitialView extends Component {
       showResultsView,
       tags,
       appliedTags,
-      filteredImages
     } = this.state;
 
     let rightButtonConfig = this.state.isSelectable ? {
@@ -157,38 +161,34 @@ export default class InitialView extends Component {
           }}>
             {
               appliedTags.length ? (
-                <ScrollView
-                  style={{
-                    flex: 1,
+                <ListView
+                  enableEmptySections
+                  dataSource={this.state.dataSource}
+                  contentContainerStyle={{
                     paddingTop: 60,
-                  }}
-                >
-
-                  <View style={{
-                    flex: 1,
                     flexDirection: 'row',
                     flexWrap: 'wrap',
                     alignItems: 'flex-start',
-                  }}>
-
-                    {
-                      filteredImages.map( (image, i) => (
-                        <TouchableOpacity
-                          key={i} 
-                          style={{marginBottom: 3, marginRight: 3}}
-                          onPress={() => this.getSelectedImages(image)}>
-                          <Image 
-                            source={{uri: image.uri}} 
-                            style={{
-                              width: (width/3)-3,
-                              height: (width/3)-3,
-                            }}
-                          />
-                        </TouchableOpacity>
-                      ))
-                    }
-                  </View>
-                </ScrollView>
+                  }}
+                  renderRow={( image, i ) => (
+                      <TouchableOpacity
+                        key={i} 
+                        style={{
+                          marginBottom: 3, 
+                          marginRight: 3,
+                        }}
+                        onPress={() => this.getSelectedImages(image)}
+                      >
+                        <Image 
+                          source={{uri: image.uri}} 
+                          style={{
+                            width: (width/3)-3,
+                            height: (width/3)-3,
+                          }}
+                        />
+                      </TouchableOpacity>
+                  )}
+                />
               ) : (
                 <CameraRollPicker
                   callback={this.getSelectedImages.bind(this)}
