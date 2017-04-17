@@ -128,8 +128,6 @@ export default class AddTags extends Component {
 
     tags = tags || [];
 
-    console.log(current)
-
     let imageUri = current.uri;
     let imageCount = selectedImages.length ? selectedImages.length : 1;
     let titleConfig = {

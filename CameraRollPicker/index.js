@@ -40,7 +40,7 @@ class CameraRollPicker extends Component {
   }
 
   componentWillUnmount(){
-    this.state.queryResult.stopTracking();
+    if(this.state.queryResult.stopTracking) this.state.queryResult.stopTracking();
   }
 
   componentWillReceiveProps(nextProps) {

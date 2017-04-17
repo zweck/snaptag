@@ -40,7 +40,7 @@ class ImageItem extends Component {
         }}
         onPress={() => this._handleClick(item)}>
         <Image
-          source={{uri: item.uri}}
+          source={ item.image }
           style={{height: imageSize, width: imageSize}} >
         </Image>
       </TouchableOpacity>
