@@ -5,12 +5,12 @@ import {
   View,
   ScrollView,
   Dimensions,
-  KeyboardAvoidingView,
   TextInput,
   Image,
   Button,
   AlertIOS,
-  TouchableOpacity
+  TouchableOpacity,
+  ActionSheetIOS
 } from 'react-native';
 
 import NavigationBar from './NavigationBar';
@@ -128,6 +128,8 @@ export default class AddTags extends Component {
 
     tags = tags || [];
 
+    console.log(current)
+
     let imageUri = current.uri;
     let imageCount = selectedImages.length ? selectedImages.length : 1;
     let titleConfig = {
@@ -136,7 +138,7 @@ export default class AddTags extends Component {
     }
     return(
       <View style={styles.container}>
-        <KeyboardAvoidingView behavior='position'>
+        <View behavior='position'>
           <NavigationBar
             statusBar={{
               style: 'light-content'
@@ -155,13 +157,10 @@ export default class AddTags extends Component {
               handler: this.applyTags.bind(this)
             }}
           />
-          <ScrollView
-            keyboardDismissMode='interactive'
-          >
+          <ScrollView>
             <View style={{
               position: 'relative',
               width: width, 
-              height: width,
             }}>
               {
                 selectedImages[2] ? (
@@ -219,7 +218,6 @@ export default class AddTags extends Component {
             </View>
             <View style={{
               flex: 1,
-              borderRadius: 5,
               margin: 10,
             }}>
               <Text style={{
@@ -277,7 +275,60 @@ export default class AddTags extends Component {
               </View>
             </View>
           </ScrollView>
-        </KeyboardAvoidingView>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              alignItems: 'flex-start'
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                width: (width/2)-30,
+                height: 30,
+                borderRadius: 8,
+                overflow: 'hidden',
+                margin: 15,
+                backgroundColor: '#5AC8FB',
+              }}
+              onPress={ () => 
+                ActionSheetIOS.showShareActionSheetWithOptions(
+                  { url: imageUri },
+                  () => AlertIOS.alert('Oh no, something went wrong with the share'),
+                  () => {},
+                ) 
+              }
+            >
+              <Text style={{ 
+                color: '#000',
+                height: 30,
+                padding: 8,
+                width: (width/2)-30,
+                textAlign: 'center', 
+              }}>Share</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={{
+                width: (width/2)-30,
+                height: 30,
+                borderRadius: 8,
+                overflow: 'hidden',
+                margin: 15,
+                backgroundColor: 'red',
+              }}
+            >
+              <Text style={{ 
+                color: '#000',
+                height: 30,
+                padding: 8,
+                width: (width/2)-30,
+                textAlign: 'center', 
+              }}>DELETE</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
     );
   }
