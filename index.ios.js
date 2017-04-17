@@ -6,7 +6,7 @@ import {
   Text,
   View
 } from 'react-native';
-import { TabViewAnimated, TabBar } from 'react-native-tab-view';
+import { TabViewAnimated, TabBar, TabViewPagerPan } from 'react-native-tab-view';
 
 import NavigationBar from './NavigationBar';
 import InitialView from './InitialView';
@@ -81,29 +81,40 @@ class Snaptag extends Component {
 
   _renderScene = ({ route }) => {
     switch (route.key) {
-    case '1':
-      return <CameraView realm={ realm } />;
-    case '2':
-      const initialRoute = {
-        component: InitialView
-      };
+      case '1':
+        return <CameraView realm={ realm } />;
+      case '2':
+        const initialRoute = {
+          component: InitialView
+        };
 
-      return (
-        <View style={{ 
-          flex: 1, 
-        }}>
-          <Navigator
-            initialRoute={initialRoute}
-            renderScene={renderScene}
-            configureScene={configureScene}
-          />
-        </View>
-      )
-    case '3':
-      return ( <TagList realm={ realm }/> )
-    default:
-      return null;
+        return (
+          <View style={{ 
+            flex: 1, 
+          }}>
+            <Navigator
+              initialRoute={initialRoute}
+              renderScene={renderScene}
+              configureScene={configureScene}
+            />
+          </View>
+        )
+      case '3':
+        return ( <TagList realm={ realm }/> )
+      default:
+        return null;
     }
+  }
+
+  _renderPager(props){
+    return(
+      <TabViewPagerPan
+        { ...props }
+        lazy
+        swipeDistanceThreshold={300}
+        swipeVelocityThreshold={0.5}
+      />
+    )
   }
 
   _handleChangeTab = (index) => {
@@ -120,6 +131,7 @@ class Snaptag extends Component {
         renderScene={this._renderScene}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
+        renderPager={ this._renderPager }
       />
     );
   }
