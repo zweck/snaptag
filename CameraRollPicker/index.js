@@ -10,10 +10,11 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+const { width, height } = Dimensions.get('window');
+const WINDOW_WIDTH = width;
+const WINDOW_HEIGHT = width / height;
+
 import RNPhotosFramework from 'react-native-photos-framework';
-
-const { WINDOW_WIDTH, WINDOW_HEIGHT } = Dimensions.get('window');
-
 import ImageItem from './ImageItem';
 
 class CameraRollPicker extends Component {
@@ -26,12 +27,20 @@ class CameraRollPicker extends Component {
       lastCursor: null,
       loadingMore: false,
       noMore: false,
+      queryResult: {},
       dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
     };
   }
 
   componentWillMount() {
     this.fetch();
+    RNPhotosFramework.onLibraryChange(() => {
+      this.fetch();
+    });
+  }
+
+  componentWillUnmount(){
+    this.state.queryResult.stopTracking();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -54,7 +63,7 @@ class CameraRollPicker extends Component {
           startIndex: 0,
           endIndex: 5000,
           preCacheAssets: true,
-          prepareForSizeDisplay: {width: WINDOW_WIDTH, height: WINDOW_WIDTH},
+          prepareForSizeDisplay: {width: WINDOW_WIDTH/3, height: WINDOW_WIDTH/3},
           fetchOptions : {
             sourceTypes: ['userLibrary'],
             sortDescriptors : [
@@ -70,6 +79,7 @@ class CameraRollPicker extends Component {
   }
 
   _appendImages(data) {
+    this.setState({ queryResult: data });
     var assets = data.assets;
     var newState = {
       loadingMore: false,
@@ -104,7 +114,7 @@ class CameraRollPicker extends Component {
     var listViewOrEmptyText = dataSource.getRowCount() > 0 ? (
       <ScrollView keyboardDismissMode='interactive' >
         <ListView
-          style={{flex: 1, paddingTop: 65,  paddingBottom: 65, marginBottom: -15}}
+          style={{flex: 1, paddingTop: 65,  paddingBottom: 200 }}
           scrollRenderAheadDistance={scrollRenderAheadDistance}
           initialListSize={initialListSize}
           pageSize={pageSize}

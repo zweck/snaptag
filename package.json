@@ -16,7 +16,6 @@
     "react-native-camera-roll-picker": "zweck/react-native-camera-roll-picker#patch-1",
     "react-native-navbar": "^1.6.2",
     "react-native-photos-framework": "^1.0.1",
-    "react-native-search-bar": "^3.0.0",
     "react-native-simple-store": "^1.1.0",
     "react-native-tab-view": "^0.0.57",
     "react-native-tag-input": "^0.0.14",

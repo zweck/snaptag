@@ -64,6 +64,19 @@ export default class InitialView extends Component {
 
   getTagsFromStore(){
     let tags = this.props.realm.objects('Tag');
+    let images = this.props.realm.objects('Image');
+    let tagCount = images.reduce( (topTags, image) => {
+      Array.from(image.tags).forEach( tag => (
+        topTags[tag.name] ? topTags[tag.name] = topTags[tag.name]+1 : topTags[tag.name] = 1
+      ));
+      return topTags;
+    }, {});
+
+    tags.forEach( tag => {
+      if( !tagCount.hasOwnProperty(tag.name) ) tagCount[tag.name] = 0;
+    });
+
+    tags = Object.keys(tagCount).sort((a,b) => tagCount[b]-tagCount[a]);
     this.setState({ tags });
   }
 
@@ -150,6 +163,7 @@ export default class InitialView extends Component {
           flex: 1,
           position: 'absolute',
           top: 0,
+          bottom: 0,
           zIndex: -1,
           height: height+50,
           width: width,
@@ -166,6 +180,7 @@ export default class InitialView extends Component {
                   dataSource={this.state.dataSource}
                   contentContainerStyle={{
                     paddingTop: 60,
+                    paddingBottom: 200,
                     flexDirection: 'row',
                     flexWrap: 'wrap',
                     alignItems: 'flex-start',
@@ -203,44 +218,52 @@ export default class InitialView extends Component {
           <ScrollView 
             style={{ 
               flex: 1,
-              maxHeight: height/8, 
-              top: -50,
+              position: 'absolute',
+              height: height/4, 
+              bottom: 0,
+              left: 0,
+              width: width,
+              paddingBottom: 160,
             }}
           >
-            <BlurView 
-              blurType="dark" 
-              blurAmount={10} 
+            <View
               style={{
-                flex: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                alignItems: 'flex-start',
-                paddingTop: 10,
-                paddingBottom: 10,
-                marginBottom: 30,
               }}
             >
-              {
-                tags.map( tag => (
-                  <TouchableOpacity
-                    key={ tag.name }
-                    style={{
-                      borderRadius: 5,
-                      backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
-                      paddingTop: 5,
-                      paddingBottom: 5,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      margin: 5
-                    }}
-                    onPress={() => this.addToFilter(tag)}
-                    accessibilityLabel={`Button to remove a tag named ${tag.name}`}
-                  >
-                    <Text style={{color: '#000'}}>{ tag.name }</Text>
-                  </TouchableOpacity>
-                ))
-              }
-            </BlurView>
+              <BlurView 
+                blurType="dark" 
+                blurAmount={10} 
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'flex-start',
+                  paddingTop: 10,
+                  paddingBottom: 80,
+                }}
+              >
+                {
+                  tags.map( tag => (
+                    <TouchableOpacity
+                      key={ tag }
+                      style={{
+                        borderRadius: 5,
+                        backgroundColor: appliedTags.some( appliedTag => tag === appliedTag.name ) ? '#5AC8FB' : '#ccc',
+                        paddingTop: 10,
+                        paddingBottom: 10,
+                        paddingLeft: 15,
+                        paddingRight: 15,
+                        margin: 5
+                      }}
+                      onPress={() => this.addToFilter(tag)}
+                      accessibilityLabel={`Button to remove a tag named ${tag}`}
+                    >
+                      <Text style={{color: '#000'}}>{ tag }</Text>
+                    </TouchableOpacity>
+                  ))
+                }
+              </BlurView>
+            </View>
           </ScrollView>
         </View>
       </View>
@@ -254,6 +277,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   cameraRoll: {
-    paddingTop: 70
+    paddingTop: 70,
+    paddingBottom: 70
   },
 });

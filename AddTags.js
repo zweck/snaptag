@@ -160,17 +160,8 @@ export default class AddTags extends Component {
           >
             <View style={{
               position: 'relative',
-              shadowColor: '#000000',
-              shadowOffset: {
-                width: 0,
-                height: 3
-              },
-              shadowRadius: 3,
-              shadowOpacity: 0.2,
-              width: width-60, 
-              height: width-60,
-              margin: 30,
-              borderRadius: 5,
+              width: width, 
+              height: width,
             }}>
               {
                 selectedImages[2] ? (
@@ -220,9 +211,8 @@ export default class AddTags extends Component {
                 <Image 
                   source={{uri: imageUri}} 
                   style={{
-                    width: width-60, 
-                    height: width-60,
-                    borderRadius: 5,
+                    width: width, 
+                    height: width,
                   }}
                 />
               </View>

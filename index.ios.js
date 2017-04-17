@@ -82,7 +82,7 @@ class Snaptag extends Component {
   _renderScene = ({ route }) => {
     switch (route.key) {
     case '1':
-      return <CameraView />;
+      return <CameraView realm={ realm } />;
     case '2':
       const initialRoute = {
         component: InitialView

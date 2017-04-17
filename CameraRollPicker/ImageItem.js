@@ -25,7 +25,7 @@ class ImageItem extends Component {
 
   render() {
     var {item, selected, selectedMarker, imageMargin} = this.props;
-    let imageSize = selected ? this._imageSize-10 : this._imageSize;
+    let imageSize = selected ? this._imageSize-16 : this._imageSize;
 
     return (
       <TouchableOpacity
@@ -33,21 +33,15 @@ class ImageItem extends Component {
           position: 'relative', 
           marginBottom: imageMargin, 
           marginRight: imageMargin,
-          borderColor: '#5AC8FB',
-          borderWidth: selected ? 5 : 0,
+          borderColor: '#3FD774',
+          borderWidth: selected ? 8 : 0,
+          borderRadius: selected ? this._imageSize/2 : 0,
+          overflow: selected ? 'hidden' : 'visible',
         }}
         onPress={() => this._handleClick(item)}>
         <Image
           source={{uri: item.uri}}
           style={{height: imageSize, width: imageSize}} >
-          { (selected) ? (
-              <BlurView 
-                blurType="dark" 
-                blurAmount={10}
-                style={{height: imageSize, width: imageSize}}
-              />
-            ) : null 
-          }
         </Image>
       </TouchableOpacity>
     );
