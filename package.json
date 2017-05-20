@@ -10,6 +10,7 @@
     "change-case": "^3.0.1",
     "react": "~15.4.1",
     "react-native": "0.42.0",
+    "react-native-activity-view": "^0.2.11",
     "react-native-animated-swipeout": "^2.0.14",
     "react-native-blur": "^2.0.0",
     "react-native-camera": "https://github.com/lwansbrough/react-native-camera.git",
@@ -17,6 +18,7 @@
     "react-native-navbar": "^1.6.2",
     "react-native-photos-framework": "^1.0.1",
     "react-native-simple-store": "^1.1.0",
+    "react-native-swipeout": "^2.1.1",
     "react-native-tab-view": "^0.0.57",
     "react-native-tag-input": "^0.0.14",
     "realm": "^1.1.1"

@@ -110,7 +110,6 @@ class Snaptag extends Component {
     return(
       <TabViewPagerPan
         { ...props }
-        lazy
         swipeDistanceThreshold={300}
         swipeVelocityThreshold={0.5}
       />

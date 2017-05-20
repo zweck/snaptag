@@ -8,7 +8,7 @@ import {
   AlertIOS
 } from 'react-native';
 
-import Swipeout from 'react-native-animated-swipeout';
+import Swipeout from 'react-native-swipeout';
 import NavigationBar from './NavigationBar';
 
 export default class TagList extends Component {

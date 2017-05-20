@@ -35,8 +35,6 @@ class ImageItem extends Component {
           marginRight: imageMargin,
           borderColor: '#3FD774',
           borderWidth: selected ? 8 : 0,
-          borderRadius: selected ? this._imageSize/2 : 0,
-          overflow: selected ? 'hidden' : 'visible',
         }}
         onPress={() => this._handleClick(item)}>
         <Image

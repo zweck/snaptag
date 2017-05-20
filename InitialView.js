@@ -12,7 +12,6 @@ import {
 
 import { BlurView } from 'react-native-blur';
 import NavigationBar from './NavigationBar';
-import SearchBar from 'react-native-search-bar';
 
 import CameraRollPicker from './CameraRollPicker';
 import ImageView from './ImageView';
@@ -44,8 +43,8 @@ export default class InitialView extends Component {
 
   addToFilter(newTag){
     let { appliedTags } = this.state;
-    if(appliedTags.some( appliedTag => appliedTag.name === newTag.name )){
-      appliedTags = Array.from(appliedTags).filter( appliedTag => appliedTag.name !== newTag.name );
+    if(appliedTags.some( appliedTag => appliedTag === newTag )){
+      appliedTags = Array.from(appliedTags).filter( appliedTag => appliedTag !== newTag );
     }else{
       appliedTags.push(newTag);
     }
@@ -53,7 +52,7 @@ export default class InitialView extends Component {
     this.setState({ appliedTags }, () => {
       let images = this.props.realm.objects('Image');
       let filteredImages = Array.from(images).filter(image => 
-        appliedTags.every( appliedTag => image.tags.some( tag => appliedTag.name === tag.name ) )
+        appliedTags.every( appliedTag => image.tags.some( tag => appliedTag === tag.name ) )
       );
       this.setState({
         dataSource: this.ds.cloneWithRows( filteredImages )
@@ -248,7 +247,7 @@ export default class InitialView extends Component {
                       key={ tag }
                       style={{
                         borderRadius: 5,
-                        backgroundColor: appliedTags.some( appliedTag => tag === appliedTag.name ) ? '#5AC8FB' : '#ccc',
+                        backgroundColor: appliedTags.some( appliedTag => tag === appliedTag ) ? '#5AC8FB' : '#ccc',
                         paddingTop: 10,
                         paddingBottom: 10,
                         paddingLeft: 15,

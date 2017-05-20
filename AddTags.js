@@ -10,12 +10,15 @@ import {
   Button,
   AlertIOS,
   TouchableOpacity,
-  ActionSheetIOS
+  ActionSheetIOS,
+  NativeModules
 } from 'react-native';
 
-import NavigationBar from './NavigationBar';
-import store from 'react-native-simple-store';
+import RNPhotosFramework from 'react-native-photos-framework';
 import changeCase from 'change-case';
+import ActivityView from 'react-native-activity-view';
+
+import NavigationBar from './NavigationBar';
 
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
@@ -112,6 +115,26 @@ export default class AddTags extends Component {
     this.getTagsFromStore();
   }
 
+  shareImage(){
+    let {
+      selectedImages,
+      current
+    } = this.props.route;
+    current = current || selectedImages[0];
+    let imageUri = current.uri;
+
+    ActivityView.show({
+      imageUrl: imageUri
+    });
+  }
+
+  deleteImage(){
+    let { current, selectedImages } = this.props.route;
+    let removeArray = current ? [current] : [];
+    RNPhotosFramework.deleteAssets(selectedImages)
+    .then( () => this.dismissModal());
+  }
+
   render(){
 
     let {
@@ -134,6 +157,7 @@ export default class AddTags extends Component {
       title: `Tag ${imageCount} image${ selectedImages.length > 1 ? 's' : '' }`,
       tintColor: 'white',
     }
+
     return(
       <View style={styles.container}>
         <View behavior='position'>
@@ -160,48 +184,6 @@ export default class AddTags extends Component {
               position: 'relative',
               width: width, 
             }}>
-              {
-                selectedImages[2] ? (
-                  <View style={{
-                    position: 'absolute',
-                    marginTop: 10,
-                    marginLeft: 10,
-                    opacity: 0.5,
-                  }}>
-                    <Image 
-                      source={{
-                        uri: selectedImages[1].uri
-                      }}
-                      style={{
-                        width: width-60, 
-                        height: width-60,
-                        borderRadius: 5,
-                      }}
-                    />
-                  </View>
-                ) : (null)
-              }
-              {
-                selectedImages[1] ? (
-                  <View style={{
-                    position: 'absolute',
-                    marginTop: -5,
-                    marginLeft: -10,
-                    opacity: 0.8,
-                  }}>
-                    <Image 
-                      source={{
-                        uri: selectedImages[0].uri
-                      }}
-                      style={{
-                        width: width-60, 
-                        height: width-60,
-                        borderRadius: 5,
-                      }}
-                    />
-                  </View>
-                ) : (null)
-              }
               <View style={{
                 opacity: 1,
               }}>
@@ -290,13 +272,7 @@ export default class AddTags extends Component {
                 margin: 15,
                 backgroundColor: '#5AC8FB',
               }}
-              onPress={ () => 
-                ActionSheetIOS.showShareActionSheetWithOptions(
-                  { url: imageUri },
-                  () => AlertIOS.alert('Oh no, something went wrong with the share'),
-                  () => {},
-                ) 
-              }
+              onPress={ this.shareImage.bind(this) }
             >
               <Text style={{ 
                 color: '#000',
@@ -316,6 +292,7 @@ export default class AddTags extends Component {
                 margin: 15,
                 backgroundColor: 'red',
               }}
+              onPress={ this.deleteImage.bind(this) }
             >
               <Text style={{ 
                 color: '#000',
