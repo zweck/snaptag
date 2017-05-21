@@ -17,11 +17,14 @@ import {
 import RNPhotosFramework from 'react-native-photos-framework';
 import changeCase from 'change-case';
 import ActivityView from 'react-native-activity-view';
+import { BlurView } from 'react-native-blur';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import NavigationBar from './NavigationBar';
 
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
+const SCREEN_HEIGHT = height;
 const ASPECT_RATIO = width / height;
 
 export default class AddTags extends Component {
@@ -179,130 +182,167 @@ export default class AddTags extends Component {
               handler: this.applyTags.bind(this)
             }}
           />
-          <ScrollView>
-            <View style={{
-              position: 'relative',
-              width: width, 
-            }}>
-              <View style={{
-                opacity: 1,
-              }}>
-                <Image 
-                  source={{uri: imageUri}} 
-                  style={{
-                    width: width, 
-                    height: width,
-                  }}
-                />
-              </View>
-            </View>
-            <View style={{
-              flex: 1,
-              margin: 10,
-            }}>
-              <Text style={{
-                  color: '#ccc',
-                  borderStyle: 'solid',
-                }}
-              > Select tags to add </Text>
-              <View style={{
-                flex: 1,
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                alignItems: 'flex-start'
-              }}>
-                <TouchableOpacity
-                  style={{
-                    borderRadius: 5,
-                    backgroundColor: '#0BD318',
-                    paddingTop: 5,
-                    paddingBottom: 5,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    margin: 5
-                  }}
-                  onPress={() => (
-                    AlertIOS.prompt(
-                      'Add New Tag',
-                      null,
-                      this.addNewTag.bind(this)
-                    ))
-                  }
-                  accessibilityLabel='Button to add a new tag'
-                >
-                  <Text style={{color: '#000'}}>Add New</Text>
-                </TouchableOpacity>
-                {
-                  tags.map( tag => (
-                    <TouchableOpacity
-                      key={ tag.name }
-                      style={{
-                        borderRadius: 5,
-                        backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
-                        paddingTop: 5,
-                        paddingBottom: 5,
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        margin: 5
-                      }}
-                      onPress={() => this.toggleTag(tag)}
-                      accessibilityLabel={`Button to remove a tag named ${tag.name}`}
-                    >
-                      <Text style={{color: '#000'}}>{ tag.name }</Text>
-                    </TouchableOpacity>
-                  ))
-                }
-              </View>
-            </View>
-          </ScrollView>
-          <View
+          <View style={{
+            position: 'absolute',
+            width: width, 
+            height: SCREEN_HEIGHT,
+            zIndex: -1,
+          }}>
+            <Image 
+              source={{uri: imageUri}} 
+              style={{
+                width: width, 
+                height: SCREEN_HEIGHT,
+              }}
+            />
+          </View>
+          <ScrollView
             style={{
-              flex: 1,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start'
+              paddingTop: SCREEN_HEIGHT-330,
             }}
           >
-            <TouchableOpacity
-              style={{
-                width: (width/2)-30,
-                height: 30,
-                borderRadius: 8,
-                overflow: 'hidden',
-                margin: 15,
-                backgroundColor: '#5AC8FB',
-              }}
-              onPress={ this.shareImage.bind(this) }
+            <BlurView
+              blurType="dark" 
+              blurAmount={10} 
             >
-              <Text style={{ 
-                color: '#000',
-                height: 30,
-                padding: 8,
-                width: (width/2)-30,
-                textAlign: 'center', 
-              }}>Share</Text>
-            </TouchableOpacity>
+              <View style={{
+                flex: 1,
+                margin: 10,
+              }}>
+                <Text style={{
+                    color: '#ccc',
+                    borderStyle: 'solid',
+                  }}
+                > Select tags to add </Text>
+                <View style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'flex-start'
+                }}>
+                  <TouchableOpacity
+                    style={{
+                      borderRadius: 5,
+                      backgroundColor: '#0BD318',
+                      paddingTop: 5,
+                      paddingBottom: 5,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      margin: 5
+                    }}
+                    onPress={() => (
+                      AlertIOS.prompt(
+                        'Add New Tag',
+                        null,
+                        this.addNewTag.bind(this)
+                      ))
+                    }
+                    accessibilityLabel='Button to add a new tag'
+                  >
+                    <Text style={{color: '#000'}}>Add New</Text>
+                  </TouchableOpacity>
+                  {
+                    tags.map( tag => (
+                      <TouchableOpacity
+                        key={ tag.name }
+                        style={{
+                          borderRadius: 5,
+                          backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
+                          paddingTop: 5,
+                          paddingBottom: 5,
+                          paddingLeft: 10,
+                          paddingRight: 10,
+                          margin: 5
+                        }}
+                        onPress={() => this.toggleTag(tag)}
+                        accessibilityLabel={`Button to remove a tag named ${tag.name}`}
+                      >
+                        <Text style={{color: '#000'}}>{ tag.name }</Text>
+                      </TouchableOpacity>
+                    ))
+                  }
+                </View>
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'flex-start',
+                  marginBottom: 40,
+                }}
+              >
+                <BlurView
+                  blurType="light" 
+                  blurAmount={10} 
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 40,
+                    overflow: 'hidden',
+                    margin: 15,
+                    backgroundColor: 'rgba(119, 198, 246, 1)',
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 40,
+                      overflow: 'hidden',
+                    }}
+                    onPress={ this.shareImage.bind(this) }
+                  >
+                    <Text style={{ 
+                      color: 'rgb(79, 104, 148)',
+                      width: 80,
+                      borderRadius: 40,
+                      marginTop: 25,
+                      textAlign: 'center', 
+                      backgroundColor: 'transparent',
+                    }}>
+                      <Icon name="ios-share-outline" size={30} />
+                    </Text>
+                  </TouchableOpacity>
+                </BlurView>
 
-            <TouchableOpacity
-              style={{
-                width: (width/2)-30,
-                height: 30,
-                borderRadius: 8,
-                overflow: 'hidden',
-                margin: 15,
-                backgroundColor: 'red',
-              }}
-              onPress={ this.deleteImage.bind(this) }
-            >
-              <Text style={{ 
-                color: '#000',
-                height: 30,
-                padding: 8,
-                width: (width/2)-30,
-                textAlign: 'center', 
-              }}>DELETE</Text>
-            </TouchableOpacity>
-          </View>
+                <BlurView
+                  blurType="light" 
+                  blurAmount={10} 
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 40,
+                    overflow: 'hidden',
+                    margin: 15,
+                    backgroundColor: 'rgba(255, 0, 0, 1)',
+                  }}
+                >
+                  <TouchableOpacity
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: 40,
+                      overflow: 'hidden',
+                    }}
+                    onPress={ this.deleteImage.bind(this) }
+                  >
+                    <Text style={{ 
+                      color: 'rgb(157, 0, 6)',
+                      width: 80,
+                      borderRadius: 40,
+                      marginTop: 25,
+                      textAlign: 'center', 
+                      backgroundColor: 'transparent',
+                    }}>
+                      <Icon name="ios-trash-outline" size={30} />
+                    </Text>
+                  </TouchableOpacity>
+                </BlurView>
+
+              </View>
+            </BlurView>
+          </ScrollView>
         </View>
       </View>
     );
@@ -313,7 +353,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    height: height
+    height: height,
+    position: 'relative',
   },
   cameraRoll: {
     paddingTop: 70
