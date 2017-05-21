@@ -92,6 +92,16 @@ export default class InitialView extends Component {
 
   getSelectedImages(images, current){
     if(!current) current = Array.isArray(images) ? images[0] : images;
+    
+    // if the images object isnt an array it means it's not come
+    // from the camera roll but from a filtered list so needs 
+    // to be dropped into an array
+    if(!Array.isArray(images)) {
+      let { selectedImages } = this.state;
+      selectedImages.find( img => img.uri === images.uri ) ? selectedImages = selectedImages.filter( img => img.uri !== images.uri ) : selectedImages.push( images );
+      images = selectedImages;
+    }
+
     this.setState({ selectedImages: images, current });
     if(!this.state.isSelectable){
       this.setState({ selectedImages: [] });
@@ -123,11 +133,12 @@ export default class InitialView extends Component {
     let {
       showResultsView,
       tags,
+      selectedImages,
       appliedTags,
     } = this.state;
 
     let rightButtonConfig = this.state.isSelectable ? {
-      title: 'Add Tags',
+      title: 'Manage',
       tintColor: '#5AC8FB',
       handler: this.openAddTagModal.bind(this)
     } : null;
@@ -190,14 +201,16 @@ export default class InitialView extends Component {
                         style={{
                           marginBottom: 3, 
                           marginRight: 3,
+                          borderColor: '#3FD774',
+                          borderWidth: selectedImages.find( img => img.uri === image.uri ) ? 8 : 0,
                         }}
                         onPress={() => this.getSelectedImages(image)}
                       >
                         <Image 
                           source={{uri: image.uri}} 
                           style={{
-                            width: (width/3)-3,
-                            height: (width/3)-3,
+                            width: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
+                            height: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
                           }}
                         />
                       </TouchableOpacity>
