@@ -8,8 +8,11 @@ import {
   ScrollView,
   Image,
   ListView,
+  Animated,
+  Easing,
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/Ionicons';
 import { BlurView } from 'react-native-blur';
 import NavigationBar from './NavigationBar';
 
@@ -25,7 +28,8 @@ export default class InitialView extends Component {
   constructor(props){
     super(props);
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
+    this.animatedValue = new Animated.Value(1);
+ 
     this.state = {
       dataSource: this.ds.cloneWithRows([]),
       isSelectable: false,
@@ -34,7 +38,19 @@ export default class InitialView extends Component {
       showResultsView: false,
       tags: [],
       appliedTags: [],
+      viewHidden: true,
     };
+  }
+
+  slide(){
+    Animated.timing(
+      this.animatedValue,
+      {
+        toValue: this.animatedValue._value === 1 ? 0 : 1,
+        duration: 300
+      }
+    ).start();
+    this.setState({ viewHidden: !this.state.viewHidden });
   }
 
   componentDidMount(){
@@ -135,6 +151,7 @@ export default class InitialView extends Component {
       tags,
       selectedImages,
       appliedTags,
+      viewHidden,
     } = this.state;
 
     let rightButtonConfig = this.state.isSelectable ? {
@@ -152,6 +169,11 @@ export default class InitialView extends Component {
       tintColor: '#5AC8FB',
       handler: this.toggleSelect.bind(this)
     };
+
+    const animatedBottom = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, -height/1.55]
+    });
 
     return (
       <View style={styles.container}>
@@ -196,24 +218,24 @@ export default class InitialView extends Component {
                     alignItems: 'flex-start',
                   }}
                   renderRow={( image, i ) => (
-                      <TouchableOpacity
-                        key={i} 
+                    <TouchableOpacity
+                      key={i} 
+                      style={{
+                        marginBottom: 3, 
+                        marginRight: 3,
+                        borderColor: '#3FD774',
+                        borderWidth: selectedImages.find( img => img.uri === image.uri ) ? 8 : 0,
+                      }}
+                      onPress={() => this.getSelectedImages(image)}
+                    >
+                      <Image 
+                        source={{uri: image.uri}} 
                         style={{
-                          marginBottom: 3, 
-                          marginRight: 3,
-                          borderColor: '#3FD774',
-                          borderWidth: selectedImages.find( img => img.uri === image.uri ) ? 8 : 0,
+                          width: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
+                          height: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
                         }}
-                        onPress={() => this.getSelectedImages(image)}
-                      >
-                        <Image 
-                          source={{uri: image.uri}} 
-                          style={{
-                            width: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
-                            height: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
-                          }}
-                        />
-                      </TouchableOpacity>
+                      />
+                    </TouchableOpacity>
                   )}
                 />
               ) : (
@@ -227,57 +249,70 @@ export default class InitialView extends Component {
               )
             }
           </View>
-          <ScrollView 
-            style={{ 
+        </View>
+        <Animated.View 
+          style={{ 
+            flex: 1,
+            position: 'absolute',
+            bottom: animatedBottom,
+            left: 0,
+            width: width,
+          }}
+        >
+          <BlurView 
+            blurType="dark" 
+            blurAmount={10} 
+            style={{
               flex: 1,
-              position: 'absolute',
-              height: height/4, 
-              bottom: 0,
-              left: 0,
-              width: width,
-              paddingBottom: 160,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              alignItems: 'flex-start',
+              paddingTop: 10,
+              paddingBottom: 80,
+              height: height-height/4, 
+              borderRadius: 20,
+              overflow: 'hidden',
+              position: 'relative',
             }}
           >
-            <View
-              style={{
+            <TouchableOpacity 
+              style={{ 
+                position: 'absolute', 
+                right: 10, 
+                top: 10 
               }}
+              onPress={ () => this.slide() }
             >
-              <BlurView 
-                blurType="dark" 
-                blurAmount={10} 
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  alignItems: 'flex-start',
-                  paddingTop: 10,
-                  paddingBottom: 80,
-                }}
-              >
-                {
-                  tags.map( tag => (
-                    <TouchableOpacity
-                      key={ tag }
-                      style={{
-                        borderRadius: 5,
-                        backgroundColor: appliedTags.some( appliedTag => tag === appliedTag ) ? '#5AC8FB' : '#ccc',
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                        paddingLeft: 15,
-                        paddingRight: 15,
-                        margin: 5
-                      }}
-                      onPress={() => this.addToFilter(tag)}
-                      accessibilityLabel={`Button to remove a tag named ${tag}`}
-                    >
-                      <Text style={{color: '#000'}}>{ tag }</Text>
-                    </TouchableOpacity>
-                  ))
-                }
-              </BlurView>
-            </View>
-          </ScrollView>
-        </View>
+            {
+              viewHidden ? (
+                <Icon name="ios-arrow-dropup-circle" style={{ color: '#0BD318' }} size={40} />
+              ) : (
+                <Icon name="ios-arrow-dropdown-circle" style={{ color: '#0BD318' }} size={40} />
+              )
+            }
+            </TouchableOpacity>
+            {
+              tags.map( (tag, i) => i < 3 ? (
+                <TouchableOpacity
+                  key={ tag }
+                  style={{
+                    borderRadius: 5,
+                    backgroundColor: appliedTags.some( appliedTag => tag === appliedTag ) ? '#5AC8FB' : '#ccc',
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                    margin: 5
+                  }}
+                  onPress={() => this.addToFilter(tag)}
+                  accessibilityLabel={`Button to remove a tag named ${tag}`}
+                >
+                  <Text style={{color: '#000'}}>{ tag }</Text>
+                </TouchableOpacity>
+              ) : (null))
+            }
+          </BlurView>
+        </Animated.View>
       </View>
     );
   }
