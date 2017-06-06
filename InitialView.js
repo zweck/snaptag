@@ -175,6 +175,8 @@ export default class InitialView extends Component {
       outputRange: [0, -height/1.55]
     });
 
+    let numberOfTagsToShow = viewHidden ? 3 : tags.length;
+
     return (
       <View style={styles.container}>
         <NavigationBar
@@ -292,7 +294,7 @@ export default class InitialView extends Component {
             }
             </TouchableOpacity>
             {
-              tags.map( (tag, i) => i < 3 ? (
+              tags.map( (tag, i) => i < numberOfTagsToShow ? (
                 <TouchableOpacity
                   key={ tag }
                   style={{
