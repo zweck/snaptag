@@ -265,10 +265,6 @@ export default class InitialView extends Component {
             blurType="dark" 
             blurAmount={10} 
             style={{
-              flex: 1,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start',
               paddingTop: 10,
               paddingBottom: 80,
               height: height-height/4, 
@@ -277,6 +273,37 @@ export default class InitialView extends Component {
               position: 'relative',
             }}
           >
+            <ScrollView
+              contentContainerStyle={{
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'flex-start',
+                paddingRight: 50,
+                paddingLeft: 6,
+              }}
+            >
+              {
+                tags.map( (tag, i) => i < numberOfTagsToShow ? (
+                  <TouchableOpacity
+                    key={ tag }
+                    style={{
+                      borderRadius: 10,
+                      backgroundColor: appliedTags.some( appliedTag => tag === appliedTag ) ? '#5AC8FB' : '#ccc',
+                      paddingTop: 10,
+                      paddingBottom: 10,
+                      paddingLeft: 15,
+                      paddingRight: 15,
+                      margin: 5
+                    }}
+                    onPress={() => this.addToFilter(tag)}
+                    accessibilityLabel={`Button to remove a tag named ${tag}`}
+                  >
+                    <Text style={{color: '#000'}}>{ tag }</Text>
+                  </TouchableOpacity>
+                ) : (null))
+              }
+            </ScrollView>
             <TouchableOpacity 
               style={{ 
                 position: 'absolute', 
@@ -293,26 +320,6 @@ export default class InitialView extends Component {
               )
             }
             </TouchableOpacity>
-            {
-              tags.map( (tag, i) => i < numberOfTagsToShow ? (
-                <TouchableOpacity
-                  key={ tag }
-                  style={{
-                    borderRadius: 5,
-                    backgroundColor: appliedTags.some( appliedTag => tag === appliedTag ) ? '#5AC8FB' : '#ccc',
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                    margin: 5
-                  }}
-                  onPress={() => this.addToFilter(tag)}
-                  accessibilityLabel={`Button to remove a tag named ${tag}`}
-                >
-                  <Text style={{color: '#000'}}>{ tag }</Text>
-                </TouchableOpacity>
-              ) : (null))
-            }
           </BlurView>
         </Animated.View>
       </View>
