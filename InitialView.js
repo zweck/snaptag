@@ -10,6 +10,7 @@ import {
   ListView,
   Animated,
   Easing,
+  PanResponder,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -23,6 +24,7 @@ import AddTags from './AddTags';
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
 const ASPECT_RATIO = width / height;
+const SLIDEOUT_PEEK = height/1.55
 
 export default class InitialView extends Component {
   constructor(props){
@@ -39,18 +41,54 @@ export default class InitialView extends Component {
       tags: [],
       appliedTags: [],
       viewHidden: true,
+      gestureUp: -SLIDEOUT_PEEK,
+      isPanning: false,
     };
   }
 
+  componentWillMount() {
+    this._panResponder = PanResponder.create({
+      // Ask to be the responder:
+      onStartShouldSetPanResponder: (evt, gestureState) => (gestureState.dy !== 0 ? true : false),
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => (gestureState.dy !== 0 ? true : false),
+      onMoveShouldSetPanResponder: (evt, gestureState) => (gestureState.dy !== 0 ? true : false),
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => (gestureState.dy !== 0 ? true : false),
+      onPanResponderGrant: (evt, gestureState) => {
+        // The gesture has started. Show visual feedback so the user knows
+        // what is happening!
+
+        // gestureState.d{x,y} will be set to zero now
+        this.setState({ isPanning: true });
+      },
+      onPanResponderMove: ({target}, gestureState) => {
+        // The most recent move distance is gestureState.move{X,Y}
+
+        // The accumulated gesture distance since becoming responder is
+        // gestureState.d{x,y}
+        let gestureUp = gestureState.dy > 0 ? 0-gestureState.dy : -gestureState.dy-SLIDEOUT_PEEK;
+        this.setState({ gestureUp });
+      },
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+      onPanResponderRelease: (evt, gestureState) => {
+        // The user has released all touches while this view is the
+        // responder. This typically means a gesture has succeeded
+        let gestureUp = -SLIDEOUT_PEEK;
+        let viewHidden = true;
+        if(Math.abs(this.state.gestureUp) < Math.abs(SLIDEOUT_PEEK)/2) {
+          gestureUp = 0;
+          viewHidden = false;
+        }
+        this.setState({ isPanning: false, gestureUp, viewHidden });
+      },
+      onPanResponderTerminate: (evt, gestureState) => {
+        // Another component has become the responder, so this gesture
+        // should be cancelled
+      },
+    });
+  }
+
   slide(){
-    Animated.timing(
-      this.animatedValue,
-      {
-        toValue: this.animatedValue._value === 1 ? 0 : 1,
-        duration: 300
-      }
-    ).start();
-    this.setState({ viewHidden: !this.state.viewHidden });
+    this.setState({ viewHidden: !this.state.viewHidden, gestureUp: this.state.viewHidden ? 0 : -SLIDEOUT_PEEK });
   }
 
   componentDidMount(){
@@ -170,10 +208,7 @@ export default class InitialView extends Component {
       handler: this.toggleSelect.bind(this)
     };
 
-    const animatedBottom = this.animatedValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, -height/1.55]
-    });
+    const animatedBottom = this.state.gestureUp;
 
     let numberOfTagsToShow = viewHidden ? 3 : tags.length;
 
@@ -260,6 +295,7 @@ export default class InitialView extends Component {
             left: 0,
             width: width,
           }}
+          {...this._panResponder.panHandlers}
         >
           <BlurView 
             blurType="dark" 
