@@ -117,7 +117,6 @@ class CameraView extends Component {
         this.props.realm.write(() => {
           let tags = this.props.realm.objects('Tag');
           tags = tags.filtered( 'name = $0', tag );
-          console.log(tags, tags.toArray(), Array.from(tags))
           this.props.realm.create(
             'Image', 
             { 

@@ -61,9 +61,11 @@ class CameraRollPicker extends Component {
 
         RNPhotosFramework.getAssets({
           startIndex: 0,
-          endIndex: 5000,
+          endIndex: 500,
           preCacheAssets: true,
           prepareForSizeDisplay: {width: WINDOW_WIDTH/3, height: WINDOW_WIDTH/3},
+          trackInsertsAndDeletes: true,
+          assetDisplayStartToEnd: true,
           fetchOptions : {
             sourceTypes: ['userLibrary'],
             sortDescriptors : [
@@ -73,7 +75,10 @@ class CameraRollPicker extends Component {
               }
             ]
           }
-        }).then((response) => this._appendImages(response));
+        }).then((response) => {
+          // RNPhotosFramework.onChange(() => this.fetch());
+          return this._appendImages(response);
+        });
       }
     });
   }

@@ -11,9 +11,11 @@ import {
   AlertIOS,
   TouchableOpacity,
   ActionSheetIOS,
-  NativeModules
+  Modal,
+  NativeModules,
 } from 'react-native';
 
+import ImageViewer from 'react-native-image-zoom-viewer';
 import RNPhotosFramework from 'react-native-photos-framework';
 import changeCase from 'change-case';
 import ActivityView from 'react-native-activity-view';
@@ -161,9 +163,11 @@ export default class AddTags extends Component {
       tintColor: 'white',
     }
 
+    const images = selectedImages.map( image => ({ url: image.uri }));
+
     return(
       <View style={styles.container}>
-        <View behavior='position'>
+        <View style={{ position: 'relative' }} behavior='position'>
           <NavigationBar
             statusBar={{
               style: 'light-content'
@@ -183,22 +187,20 @@ export default class AddTags extends Component {
             }}
           />
           <View style={{
+            width, 
             position: 'absolute',
-            width: width, 
             height: SCREEN_HEIGHT,
             zIndex: -1,
           }}>
-            <Image 
-              source={{uri: imageUri}} 
-              style={{
-                width: width, 
-                height: SCREEN_HEIGHT,
-              }}
-            />
+            <ImageViewer imageUrls={images}/>
           </View>
           <ScrollView
             style={{
-              paddingTop: SCREEN_HEIGHT-330,
+              width,
+              flex: 1,
+              position: 'absolute',
+              top: (SCREEN_HEIGHT-SCREEN_HEIGHT/3)-30,
+              height: SCREEN_HEIGHT/3,
             }}
           >
             <BlurView
@@ -206,7 +208,6 @@ export default class AddTags extends Component {
               blurAmount={10} 
             >
               <View style={{
-                flex: 1,
                 margin: 10,
               }}>
                 <Text style={{
@@ -353,17 +354,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    height: height,
+    height: SCREEN_HEIGHT,
     position: 'relative',
-  },
-  cameraRoll: {
-    paddingTop: 70
-  },
-  textInput: {
-    borderRadius: 5,
-    borderWidth: 1,
-    height: 44,
-    paddingHorizontal: 10,
   },
 });
 

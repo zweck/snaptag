@@ -2857,6 +2857,10 @@ npmlog@^4.0.2:
     gauge "~2.7.1"
     set-blocking "~2.0.0"
 
+nt-transmit-transparently@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/nt-transmit-transparently/-/nt-transmit-transparently-1.0.7.tgz#345cf3ffda06ba1bd629935bafac9e7820385076"
+
 number-is-nan@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
@@ -3200,6 +3204,17 @@ react-native-camera-roll-picker@zweck/react-native-camera-roll-picker#patch-1:
 "react-native-camera@https://github.com/lwansbrough/react-native-camera.git":
   version "0.7.0"
   resolved "https://github.com/lwansbrough/react-native-camera.git#01189f8b7d20a12bfd103e7e2cc1c338b1a56620"
+
+react-native-image-pan-zoom@^2.0.1:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-native-image-pan-zoom/-/react-native-image-pan-zoom-2.0.3.tgz#e2163afefdc552787a61d61748f2938d0cbeadfa"
+
+react-native-image-zoom-viewer@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-image-zoom-viewer/-/react-native-image-zoom-viewer-2.0.5.tgz#569fe3fa7bce7b11b3fc916ae1df66f6cf4c705e"
+  dependencies:
+    nt-transmit-transparently "^1.0.7"
+    react-native-image-pan-zoom "^2.0.1"
 
 react-native-navbar@^1.6.2:
   version "1.7.1"
