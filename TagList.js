@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {
-  ListView,
   StyleSheet,
   Text,
   View,
   Image,
-  AlertIOS
+  AlertIOS,
+  ScrollView,
+  TouchableOpacity,
 } from 'react-native';
 
 import Swipeout from 'react-native-swipeout';
@@ -15,65 +16,44 @@ export default class TagList extends Component {
 
   constructor(props) {
     super(props);
-    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: this.ds.cloneWithRows([]),
+      tags: props.realm ? props.realm.objects('Tag') : [],
       selectedTagName: null
     };
   }
 
   getTagsFromStore(){
     let tags = this.props.realm.objects('Tag');
-    this.setState({
-      dataSource: this.ds.cloneWithRows( tags )
-    });
+    this.setState({ tags });
   }
 
-  componentDidMount(){
-    this.getTagsFromStore();
+  editTag(selectedTagName){
+    AlertIOS.prompt(
+      'Edit Tag', 
+      null, 
+      (newTagName) => {
+        this.props.realm.write(() => {
+          let tags = this.props.realm.objects('Tag');
+          let tagToEdit = tags.filtered('name == $0', selectedTagName);
+          tagToEdit[0].name = newTagName;
+          this.getTagsFromStore();
+        });
+      }, 
+      'plain-text', 
+      selectedTagName
+    );
   }
 
-  editTag(newName){
-    let { selectedTagName } = this.state;
+  deleteTag(selectedTagName){
     this.props.realm.write(() => {
       let tags = this.props.realm.objects('Tag');
-      let tagToEdit = tags.filtered('name == $0', selectedTagName);
-      tagToEdit[0].name = newName;
+      let tagToDelete = tags.filtered('name == $0', selectedTagName);
+      this.props.realm.delete(tagToDelete);
       this.getTagsFromStore();
     });
   }
 
   render(){
-
-    const swipeoutBtns = (rowData) => ([
-      {
-        text: 'Delete',
-        backgroundColor: 'red',
-        onPress: () => {
-          this.props.realm.write(() => {
-            let tags = this.props.realm.objects('Tag');
-            let tagToDelete = tags.filtered('name == $0', rowData.name);
-            this.props.realm.delete(tagToDelete);
-            this.getTagsFromStore();
-          });
-        }
-      },
-      {
-        text: 'Edit',
-        backgroundColor: '#5AC8FB',
-        onPress: () => {
-          this.setState({ selectedTagName: rowData.name });
-          AlertIOS.prompt(
-            'Edit Tag', 
-            null, 
-            this.editTag.bind(this), 
-            'plain-text', 
-            rowData.name
-          )
-        }
-      }
-    ]);
-
     return(
       <View style={styles.container}>
         <NavigationBar
@@ -90,43 +70,79 @@ export default class TagList extends Component {
             tintColor: 'white'
           }}
         />
-        <View style={{
+        <ScrollView style={{
           flex: 1,
         }}>
-          <ListView
-            enableEmptySections
-            dataSource={this.state.dataSource}
-            style={{paddingBottom: 20,}}
-            renderRow={( rowData ) => (
-
-              <Swipeout 
+          { this.state.tags.map( (tag, i) => (
+            <View 
+              key={ i }
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                borderTopColor: '#292929',
+                borderStyle: 'solid',
+                borderTopWidth: 1,
+                backgroundColor: '#000',
+              }}
+            >
+              <Text 
+                numberOfLines={0} 
+                ellipsizeMode='tail'
                 style={{ 
-                  backgroundColor: '#000',
-                  borderBottomColor: '#292929',
-                  borderStyle: 'solid',
-                  borderBottomWidth: 1,
-                }} 
-                autoClose 
-                right={swipeoutBtns(rowData)}
-              >
-                <View style={{
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
+                  flex: 1,
+                  color: '#fff',
                   padding: 20,
-                  borderTopColor: '#292929',
-                  borderStyle: 'solid',
-                  borderTopWidth: 1,
-                  backgroundColor: '#000',
-                }}>
-                  <Text style={{ color: '#fff' }} numberOfLines={0} ellipsizeMode='tail'>
-                    { rowData.name }
-                  </Text>
-                </View>
-              </Swipeout>
-
-            )}
-          />
-        </View>
+                }} 
+              >
+                { tag.name } 
+              </Text>
+              <View
+                style={{ 
+                  flex: 1,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                  paddingRight: 15,
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 5,
+                    borderColor: '#0BD318',
+                    borderWidth: 1,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    margin: 5,
+                    marginRight: 15,
+                  }}
+                  onPress={ () => this.editTag(tag.name) }
+                  accessibilityLabel='Button to edit a tag'
+                >
+                  <Text style={{color: '#0BD318'}}>Edit</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 5,
+                    borderColor: 'red',
+                    borderWidth: 1,
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    margin: 5
+                  }}
+                  onPress={ () => this.editTag(tag.name) }
+                  accessibilityLabel='Button to edit a tag'
+                >
+                  <Text style={{color: 'red'}}>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )) }
+        </ScrollView>
       </View>
     );
   }
