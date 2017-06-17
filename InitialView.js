@@ -70,11 +70,19 @@ export default class InitialView extends Component {
       onPanResponderRelease: (evt, gestureState) => {
         // The user has released all touches while this view is the
         // responder. This typically means a gesture has succeeded
-        let gestureUp = -SLIDEOUT_PEEK;
-        let viewHidden = true;
-        if(Math.abs(this.state.gestureUp) < Math.abs(SLIDEOUT_PEEK)/2) {
+        let viewHidden = this.state.viewHidden;
+        let absSlideOutPeek =  Math.abs(SLIDEOUT_PEEK);
+        let absGestureUp = Math.abs(this.state.gestureUp);
+        let gestureUp = viewHidden ? -absSlideOutPeek : 0;
+
+        if( this.state.viewHidden && (absGestureUp < absSlideOutPeek-(absSlideOutPeek/6)) ) {
           gestureUp = 0;
           viewHidden = false;
+        }
+
+        if(!this.state.viewHidden && (absGestureUp > Math.abs(SLIDEOUT_PEEK)/6)) {
+          gestureUp = -SLIDEOUT_PEEK;
+          viewHidden = true;
         }
         this.setState({ isPanning: false, gestureUp, viewHidden });
       },
