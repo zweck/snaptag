@@ -61,11 +61,9 @@ export default class InitialView extends Component {
         this.setState({ isPanning: true });
       },
       onPanResponderMove: ({target}, gestureState) => {
-        // The most recent move distance is gestureState.move{X,Y}
-
-        // The accumulated gesture distance since becoming responder is
-        // gestureState.d{x,y}
-        let gestureUp = gestureState.dy > 0 ? 0-gestureState.dy : -gestureState.dy-SLIDEOUT_PEEK;
+        const swipingUp = gestureState.dy > 0;
+        if( (this.state.viewHidden && swipingUp) || (!this.state.viewHidden && !swipingUp) ) return false;
+        let gestureUp = swipingUp ? 0-gestureState.dy : -gestureState.dy-SLIDEOUT_PEEK;
         this.setState({ gestureUp });
       },
       onPanResponderTerminationRequest: (evt, gestureState) => true,
