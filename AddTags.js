@@ -123,10 +123,8 @@ export default class AddTags extends Component {
   shareImage(){
     let {
       selectedImages,
-      current
     } = this.props.route;
-    current = current || selectedImages[0];
-    let imageUri = current.uri;
+    let imageUri = selectedImages[0].uri;
 
     ActivityView.show({
       imageUrl: imageUri

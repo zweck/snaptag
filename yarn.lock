@@ -2574,7 +2574,7 @@ lodash@^3.5.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.14.0, lodash@^4.16.6, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.6.1:
+lodash@^4.0.0, lodash@^4.14.0, lodash@^4.14.2, lodash@^4.16.6, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.6.1:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
@@ -3197,6 +3197,12 @@ react-native-blur@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-2.0.0.tgz#284b3abfb42c2d90924aa15f494ccb88d6055342"
 
+react-native-camera-kit@^5.2.18:
+  version "5.2.18"
+  resolved "https://registry.yarnpkg.com/react-native-camera-kit/-/react-native-camera-kit-5.2.18.tgz#0f50f3e29121fd1bda1d9510a6b2852df055aa64"
+  dependencies:
+    lodash "^4.14.2"
+
 react-native-camera-roll-picker@zweck/react-native-camera-roll-picker#patch-1:
   version "1.1.9"
   resolved "https://codeload.github.com/zweck/react-native-camera-roll-picker/tar.gz/9880523289cf5a02374e7e4d71accdd5afcbf36f"
@@ -3229,12 +3235,6 @@ react-native-simple-store@^1.1.0:
   resolved "https://registry.yarnpkg.com/react-native-simple-store/-/react-native-simple-store-1.1.0.tgz#69e91d6b91d362cd4ea12b0486df3eaf2f628b04"
   dependencies:
     lodash.merge "^4.6.0"
-
-react-native-swipeout@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/react-native-swipeout/-/react-native-swipeout-2.1.1.tgz#2e864a282dbb602566488c4e190e00a7c1490c11"
-  dependencies:
-    react-tween-state "^0.1.5"
 
 react-native-tab-view@^0.0.57:
   version "0.0.57"
@@ -3357,7 +3357,7 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react-tween-state@^0.1.3, react-tween-state@^0.1.5:
+react-tween-state@^0.1.3:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/react-tween-state/-/react-tween-state-0.1.5.tgz#e98b066551efb93cb92dd1be14995c2e3deae339"
   dependencies:

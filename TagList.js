@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import Swipeout from 'react-native-swipeout';
 import NavigationBar from './NavigationBar';
 
 export default class TagList extends Component {

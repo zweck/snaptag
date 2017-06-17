@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import Camera from 'react-native-camera';
+import { CameraKitCamera } from 'react-native-camera-kit';
 import { BlurView } from 'react-native-blur';
 
 const { width, height } = Dimensions.get('window');
@@ -35,76 +36,82 @@ class CameraView extends Component {
     } = this.state;
     return (
       <View style={styles.container}>
-        <Camera
-          ref={(cam) => {
-            this.camera = cam;
+        <CameraKitCamera
+          ref={cam => this.camera = cam}
+          style={{
+            flex: 1,
+            backgroundColor: 'white'
           }}
-          style={styles.preview}
-          aspect={Camera.constants.Aspect.fill}
-          defaultTouchToFocus
+          cameraOptions={{
+            flashMode: 'auto',             // on/off/auto(default)
+            focusMode: 'on',               // off/on(default)
+            zoomMode: 'on',                // off/on(default)
+            ratioOverlay:'1:1',            // optional, ratio overlay on the camera and crop the image seamlessly
+            ratioOverlayColor: '#00000077' // optional
+          }}
+        />
+        <View 
+          style={{ 
+            position: 'absolute',
+            bottom: 3,
+            flex: 1,
+            flexDirection: 'row',
+          }}
         >
-          <View 
-            style={{ 
-              position: 'absolute',
-              bottom: 3,
-              flex: 1,
-              flexDirection: 'row',
-            }}
-          >
-            {
-              topTags.map( (tag, i) => (
-                <BlurView
-                  key={ i }
-                  blurType="dark" 
-                  blurAmount={10} 
-                  style={{
-                    width: width/3,
-                  }}
-                >
-                  <Text 
-                    style={{ 
-                      textAlign: 'center', 
-                      color: '#fff', 
-                      padding: 30 
-                    }} 
-                    onPress={() => this.takePicture(tag)}
-                  >
-                    {tag}
-                  </Text>
-                </BlurView>
-              ))
-            }
-          </View>
-          <View 
-            style={{ 
-              position: 'absolute',
-              bottom: 80,
-              flex: 1,
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              alignItems: 'flex-start',
-            }}
-          >
-            <BlurView
-              blurType="dark" 
-              blurAmount={10} 
-              style={{
-                flex: 1,
-              }}
-            >
-              <Text 
-                style={{ 
-                  textAlign: 'center', 
-                  color: '#fff', 
-                  padding: 30 
-                }} 
-                onPress={() => this.takePicture()}
+          {
+            topTags.map( (tag, i) => (
+              <BlurView
+                key={ i }
+                blurType="dark" 
+                blurAmount={10} 
+                style={{
+                  width: width/3,
+                }}
               >
-                Take Without Tag
-              </Text>
-            </BlurView>
-          </View>
-        </Camera>
+                <Text 
+                  style={{ 
+                    textAlign: 'center', 
+                    color: '#fff', 
+                    padding: 30 
+                  }} 
+                  onPress={() => this.takePicture(tag)}
+                >
+                  {tag}
+                </Text>
+              </BlurView>
+            ))
+          }
+        </View>
+        <View 
+          style={{ 
+            position: 'absolute',
+            bottom: 80,
+            flex: 1,
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            alignItems: 'flex-start',
+          }}
+        >
+          <BlurView
+            blurType="dark" 
+            blurAmount={10} 
+            style={{
+              flex: 1,
+            }}
+          >
+            <Text 
+              style={{ 
+                textAlign: 'center', 
+                color: '#fff', 
+                padding: 30 
+              }} 
+              onPress={() => this.takePicture()}
+            >
+              Take Without Tag
+            </Text>
+          </BlurView>
+        </View>
+
       </View>
     );
   }
