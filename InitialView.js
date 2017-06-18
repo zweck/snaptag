@@ -307,6 +307,7 @@ export default class InitialView extends Component {
             blurType="dark" 
             blurAmount={10} 
             style={{
+              backgroundColor: 'rgba(0,0,0,0.4)',
               paddingTop: 10,
               paddingBottom: 80,
               height: height-height/4, 

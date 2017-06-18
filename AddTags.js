@@ -13,6 +13,7 @@ import {
   ActionSheetIOS,
   Modal,
   NativeModules,
+  AsyncStorage,
 } from 'react-native';
 
 import ImageViewer from 'react-native-image-zoom-viewer';
@@ -135,7 +136,10 @@ export default class AddTags extends Component {
     let { current, selectedImages } = this.props.route;
     let removeArray = current ? [current] : [];
     RNPhotosFramework.deleteAssets(selectedImages)
-    .then( () => this.dismissModal());
+    .then( () => {
+      AsyncStorage.setItem('shouldReloadCameraRoll', JSON.stringify(true));
+      return this.dismissModal()
+    });
   }
 
   render(){

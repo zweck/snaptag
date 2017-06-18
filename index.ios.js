@@ -79,7 +79,7 @@ class Snaptag extends Component {
     );
   }
 
-  _renderScene = ({ route }) => {
+  _renderScene = ({ route }, index) => {
     switch (route.key) {
       case '1':
         return <CameraView realm={ realm } />;
@@ -127,7 +127,7 @@ class Snaptag extends Component {
       <TabViewAnimated
         style={[ styles.container, this.props.style ]}
         navigationState={this.state}
-        renderScene={this._renderScene}
+        renderScene={(evt) => this._renderScene(evt, this.state.index)}
         renderFooter={this._renderFooter}
         onRequestChangeTab={this._handleChangeTab}
         renderPager={ this._renderPager }

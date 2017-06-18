@@ -24,7 +24,7 @@ class ImageItem extends Component {
   }
 
   render() {
-    var {item, selected, selectedMarker, imageMargin} = this.props;
+    var {item, selected, selectedMarker, imageMargin, key} = this.props;
     let imageSize = selected ? this._imageSize-16 : this._imageSize;
 
     return (

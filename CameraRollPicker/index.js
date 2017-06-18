@@ -8,6 +8,8 @@ import {
   ListView,
   ScrollView,
   ActivityIndicator,
+  AsyncStorage,
+  CameraRoll,
 } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
@@ -20,6 +22,9 @@ import ImageItem from './ImageItem';
 class CameraRollPicker extends Component {
   constructor(props) {
     super(props);
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+    this.allPhotos = [];
 
     this.state = {
       images: [],
@@ -27,25 +32,27 @@ class CameraRollPicker extends Component {
       lastCursor: null,
       loadingMore: false,
       noMore: false,
-      queryResult: {},
-      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      dataSource: this.ds.cloneWithRows([]),
     };
   }
 
-  componentWillMount() {
-    this.fetch();
-    RNPhotosFramework.onLibraryChange(() => {
-      this.fetch();
-    });
-  }
-
-  componentWillUnmount(){
-    if(this.state.queryResult.stopTracking) this.state.queryResult.stopTracking();
+  componentWillMount(){
+    this._fetch();
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
       selected: nextProps.selected,
+    });
+
+   this._appendImages(this.allPhotos);
+
+    AsyncStorage.getItem('shouldReloadCameraRoll')
+    .then(shouldReloadCameraRoll => {
+      if(JSON.parse(shouldReloadCameraRoll)) {
+        AsyncStorage.setItem('shouldReloadCameraRoll', JSON.stringify(false));
+        this._fetch();
+      }
     });
   }
 
@@ -61,7 +68,7 @@ class CameraRollPicker extends Component {
 
         RNPhotosFramework.getAssets({
           startIndex: 0,
-          endIndex: 500,
+          endIndex: 3000,
           preCacheAssets: true,
           prepareForSizeDisplay: {width: WINDOW_WIDTH/3, height: WINDOW_WIDTH/3},
           trackInsertsAndDeletes: true,
@@ -76,31 +83,17 @@ class CameraRollPicker extends Component {
             ]
           }
         }).then((response) => {
-          // RNPhotosFramework.onChange(() => this.fetch());
-          return this._appendImages(response);
+          return this._appendImages(response.assets);
         });
       }
     });
   }
 
-  _appendImages(data) {
-    this.setState({ queryResult: data });
-    var assets = data.assets;
-    var newState = {
-      loadingMore: false,
-    };
-
-    newState.noMore = true;
-
-    if (assets.length > 0) {
-      newState.lastCursor = true;
-      newState.images = this.state.images.concat(assets);
-      newState.dataSource = this.state.dataSource.cloneWithRows(
-        this._nEveryRow(newState.images, this.props.imagesPerRow)
-      );
-    }
-
-    this.setState(newState);
+  _appendImages(assets) {
+   this.allPhotos = assets;
+    this.setState({
+      dataSource: this.ds.cloneWithRows( this._nEveryRow(assets, this.props.imagesPerRow) )
+    });
   }
 
   render() {
@@ -117,7 +110,7 @@ class CameraRollPicker extends Component {
     } = this.props;
 
     var listViewOrEmptyText = dataSource.getRowCount() > 0 ? (
-      <ScrollView keyboardDismissMode='interactive' >
+      <ScrollView keyboardDismissMode='interactive' style={{ overflow: 'hidden' }} >
         <ListView
           style={{flex: 1, paddingTop: 65,  paddingBottom: 200 }}
           scrollRenderAheadDistance={scrollRenderAheadDistance}
@@ -211,7 +204,7 @@ class CameraRollPicker extends Component {
 
     this.setState({
       selected: selected,
-      dataSource: this.state.dataSource.cloneWithRows(
+      dataSource: this.ds.cloneWithRows(
         this._nEveryRow(this.state.images, imagesPerRow)
       ),
     });
