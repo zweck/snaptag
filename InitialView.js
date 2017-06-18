@@ -224,9 +224,6 @@ export default class InitialView extends Component {
           statusBar={{
             style: 'light-content'
           }}
-          style={{
-            height: 50,
-          }}
           title={{
             title: 'All Photos',
             tintColor: 'white'
@@ -284,7 +281,7 @@ export default class InitialView extends Component {
               ) : (
                 <CameraRollPicker
                   callback={this.getSelectedImages.bind(this)}
-                  imagesPerRow={ 3 }
+                  imagesPerRow={ 4 }
                   selected={this.state.selectedImages}
                   imageMargin={ 3 }
                   maximum={ 10000 }

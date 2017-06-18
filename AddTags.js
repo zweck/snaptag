@@ -174,9 +174,6 @@ export default class AddTags extends Component {
             statusBar={{
               style: 'light-content'
             }}
-            style={{
-              height: 50,
-            }}
             title={ titleConfig }
             leftButton={{
               title: 'Cancel',
