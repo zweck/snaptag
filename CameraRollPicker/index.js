@@ -112,7 +112,7 @@ class CameraRollPicker extends Component {
     var listViewOrEmptyText = dataSource.getRowCount() > 0 ? (
       <ScrollView keyboardDismissMode='interactive' style={{ overflow: 'hidden' }} >
         <ListView
-          style={{flex: 1, paddingTop: 65,  paddingBottom: 200 }}
+          style={{flex: 1, paddingTop: 50,  paddingBottom: 200 }}
           scrollRenderAheadDistance={scrollRenderAheadDistance}
           initialListSize={initialListSize}
           pageSize={pageSize}

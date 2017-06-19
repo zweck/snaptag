@@ -11,7 +11,6 @@ import {
   AlertIOS,
   TouchableOpacity,
   ActionSheetIOS,
-  Modal,
   NativeModules,
   AsyncStorage,
 } from 'react-native';
@@ -24,6 +23,7 @@ import { BlurView } from 'react-native-blur';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 import NavigationBar from './NavigationBar';
+import Modal from './Modal';
 
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
@@ -37,7 +37,8 @@ export default class AddTags extends Component {
     this.state = {
       tags: [],
       appliedTags: [],
-      appliedTagsCloned: []
+      appliedTagsCloned: [],
+      isOpen: false,
     }
   }
 
@@ -193,157 +194,167 @@ export default class AddTags extends Component {
           }}>
             <ImageViewer imageUrls={images}/>
           </View>
-          <ScrollView
+
+          <BlurView
+            blurType="dark" 
+            blurAmount={10} 
             style={{
               width,
               flex: 1,
               position: 'absolute',
-              top: (SCREEN_HEIGHT-SCREEN_HEIGHT/3)-30,
-              height: SCREEN_HEIGHT/3,
+              top: SCREEN_HEIGHT-95,
             }}
           >
-            <BlurView
-              blurType="dark" 
-              blurAmount={10} 
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                justifyContent: 'space-between',
+              }}
             >
-              <View style={{
-                margin: 10,
-              }}>
-                <Text style={{
-                    color: '#ccc',
-                    borderStyle: 'solid',
-                  }}
-                > Select tags to add </Text>
-                <View style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  alignItems: 'flex-start'
+              <TouchableOpacity
+                style={{
+                  margin: 10,
+                }}
+                onPress={ this.shareImage.bind(this) }
+              >
+                <Text style={{ 
+                  borderRadius: 5,
+                  overflow: 'hidden',
+                  color: 'white',
+                  paddingTop: 5,
+                  paddingBottom: 5,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  textAlign: 'center', 
+                  backgroundColor: 'rgb(0, 181, 255)',
                 }}>
-                  <TouchableOpacity
-                    style={{
-                      borderRadius: 5,
-                      backgroundColor: '#0BD318',
-                      paddingTop: 5,
-                      paddingBottom: 5,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      margin: 5
-                    }}
-                    onPress={() => (
-                      AlertIOS.prompt(
-                        'Add New Tag',
-                        null,
-                        this.addNewTag.bind(this)
-                      ))
-                    }
-                    accessibilityLabel='Button to add a new tag'
-                  >
-                    <Text style={{color: '#000'}}>Add New</Text>
-                  </TouchableOpacity>
-                  {
-                    tags.map( tag => (
-                      <TouchableOpacity
-                        key={ tag.name }
-                        style={{
-                          borderRadius: 5,
-                          backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
-                          paddingTop: 5,
-                          paddingBottom: 5,
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          margin: 5
-                        }}
-                        onPress={() => this.toggleTag(tag)}
-                        accessibilityLabel={`Button to remove a tag named ${tag.name}`}
-                      >
-                        <Text style={{color: '#000'}}>{ tag.name }</Text>
-                      </TouchableOpacity>
+                  <Icon name="ios-share-outline" size={30} />
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  margin: 10,
+                }}
+                onPress={ () => { this.setState({ isOpen: true }) } }
+              >
+                <Text style={{ 
+                  borderRadius: 5,
+                  overflow: 'hidden',
+                  color: 'white',
+                  paddingTop: 5,
+                  paddingBottom: 5,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  textAlign: 'center', 
+                  backgroundColor: '#0BD318',
+                }}>
+                  <Icon name="ios-pricetags-outline" size={30} />
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{
+                  margin: 10,
+                }}
+                onPress={ this.deleteImage.bind(this) }
+              >
+                <Text style={{ 
+                  borderRadius: 5,
+                  overflow: 'hidden',
+                  color: 'white',
+                  paddingTop: 5,
+                  paddingBottom: 5,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  textAlign: 'center', 
+                  backgroundColor: 'rgb(255,0,0)',
+                }}>
+                  <Icon name="ios-trash-outline" size={30} />
+                </Text>
+              </TouchableOpacity>
+
+            </View>
+          </BlurView>
+        </View>
+
+        <Modal 
+          isOpen={this.state.isOpen}
+          onClosed={() => this.setState({isOpen: false})}
+          backdropPressToClose={ true }
+        >
+          <BlurView
+            blurType="dark" 
+            blurAmount={10}
+            style={{
+              height: SCREEN_HEIGHT/3,
+              width: SCREEN_WIDTH-20,
+              margin: 10,
+              padding: 10,
+              borderRadius: 15,
+              overflow: 'hidden',
+              top: SCREEN_HEIGHT/3,
+            }}
+          >
+            <ScrollView>
+              <Text style={{
+                  color: '#ccc',
+                  borderStyle: 'solid',
+                }}
+              > Select tags to add </Text>
+              <View style={{
+                flex: 1,
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                alignItems: 'flex-start'
+              }}>
+                <TouchableOpacity
+                  style={{
+                    borderRadius: 5,
+                    backgroundColor: '#0BD318',
+                    paddingTop: 5,
+                    paddingBottom: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    margin: 5
+                  }}
+                  onPress={() => (
+                    AlertIOS.prompt(
+                      'Add New Tag',
+                      null,
+                      this.addNewTag.bind(this)
                     ))
                   }
-                </View>
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                  alignItems: 'flex-start',
-                  marginBottom: 40,
-                }}
-              >
-                <BlurView
-                  blurType="light" 
-                  blurAmount={10} 
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: 40,
-                    overflow: 'hidden',
-                    margin: 15,
-                    backgroundColor: 'rgba(119, 198, 246, 1)',
-                  }}
+                  accessibilityLabel='Button to add a new tag'
                 >
-                  <TouchableOpacity
-                    style={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: 40,
-                      overflow: 'hidden',
-                    }}
-                    onPress={ this.shareImage.bind(this) }
-                  >
-                    <Text style={{ 
-                      color: 'rgb(79, 104, 148)',
-                      width: 80,
-                      borderRadius: 40,
-                      marginTop: 25,
-                      textAlign: 'center', 
-                      backgroundColor: 'transparent',
-                    }}>
-                      <Icon name="ios-share-outline" size={30} />
-                    </Text>
-                  </TouchableOpacity>
-                </BlurView>
-
-                <BlurView
-                  blurType="light" 
-                  blurAmount={10} 
-                  style={{
-                    width: 80,
-                    height: 80,
-                    borderRadius: 40,
-                    overflow: 'hidden',
-                    margin: 15,
-                    backgroundColor: 'rgba(255, 0, 0, 1)',
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      width: 80,
-                      height: 80,
-                      borderRadius: 40,
-                      overflow: 'hidden',
-                    }}
-                    onPress={ this.deleteImage.bind(this) }
-                  >
-                    <Text style={{ 
-                      color: 'rgb(157, 0, 6)',
-                      width: 80,
-                      borderRadius: 40,
-                      marginTop: 25,
-                      textAlign: 'center', 
-                      backgroundColor: 'transparent',
-                    }}>
-                      <Icon name="ios-trash-outline" size={30} />
-                    </Text>
-                  </TouchableOpacity>
-                </BlurView>
-
+                  <Text style={{color: '#000'}}>Add New</Text>
+                </TouchableOpacity>
+                {
+                  tags.map( tag => (
+                    <TouchableOpacity
+                      key={ tag.name }
+                      style={{
+                        borderRadius: 5,
+                        backgroundColor: appliedTags.some( appliedTag => tag.name === appliedTag.name ) ? '#5AC8FB' : '#ccc',
+                        paddingTop: 5,
+                        paddingBottom: 5,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        margin: 5
+                      }}
+                      onPress={() => this.toggleTag(tag)}
+                      accessibilityLabel={`Button to remove a tag named ${tag.name}`}
+                    >
+                      <Text style={{color: '#000'}}>{ tag.name }</Text>
+                    </TouchableOpacity>
+                  ))
+                }
               </View>
-            </BlurView>
-          </ScrollView>
-        </View>
+            </ScrollView>
+          </BlurView>
+        </Modal>
       </View>
     );
   }

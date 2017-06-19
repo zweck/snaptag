@@ -20,6 +20,7 @@ import NavigationBar from './NavigationBar';
 import CameraRollPicker from './CameraRollPicker';
 import ImageView from './ImageView';
 import AddTags from './AddTags';
+import Modal from './Modal';
 
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width;
@@ -251,7 +252,7 @@ export default class InitialView extends Component {
                   enableEmptySections
                   dataSource={this.state.dataSource}
                   contentContainerStyle={{
-                    paddingTop: 60,
+                    paddingTop: 50,
                     paddingBottom: 200,
                     flexDirection: 'row',
                     flexWrap: 'wrap',
@@ -271,8 +272,8 @@ export default class InitialView extends Component {
                       <Image 
                         source={{uri: image.uri}} 
                         style={{
-                          width: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
-                          height: selectedImages.find( img => img.uri === image.uri ) ? (width/3)-19 : (width/3)-3,
+                          width: selectedImages.find( img => img.uri === image.uri ) ? (width/4)-19 : (width/4)-3,
+                          height: selectedImages.find( img => img.uri === image.uri ) ? (width/4)-19 : (width/4)-3,
                         }}
                       />
                     </TouchableOpacity>
@@ -290,7 +291,7 @@ export default class InitialView extends Component {
             }
           </View>
         </View>
-        <Animated.View 
+        <View 
           style={{ 
             flex: 1,
             position: 'absolute',
@@ -361,7 +362,10 @@ export default class InitialView extends Component {
             }
             </TouchableOpacity>
           </BlurView>
-        </Animated.View>
+        </View>
+        <Modal>
+          
+        </Modal>
       </View>
     );
   }
